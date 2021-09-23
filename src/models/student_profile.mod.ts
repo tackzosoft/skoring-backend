@@ -19,14 +19,6 @@ Student_profileModule.init(
             type: DataTypes.INTEGER,
             allowNull: true,
         },
-        education_board: {
-            type: DataTypes.STRING,
-            allowNull: true,
-        },
-        class: {
-            type: DataTypes.STRING,
-            allowNull: true,
-        },
         DOB: {
             type: DataTypes.DATE,
             allowNull: true,

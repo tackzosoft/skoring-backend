@@ -17,13 +17,10 @@ export default {
         date_created: Joi.string().trim()
     },
     student: {
-        student_id: Joi.string().trim(),
         user_id: Joi.string().trim(),
         profile_image: Joi.string().allow(""),
         profile_type: Joi.string().trim(),
         date_created: Joi.string().trim(),
-        address_id: Joi.string().trim(),
-        class: Joi.string().trim(),
         gender: Joi.string().trim(),
         DOB: Joi.date(),
         first_name: Joi.string().trim(),
@@ -31,17 +28,14 @@ export default {
         email: Joi.string().trim(),
         mobile: Joi.string().trim(),
         password: Joi.string().trim(),
-        parent_mobile: Joi.string().trim(),
-        education_board: Joi.string().trim()
+        parent_mobile: Joi.string().trim()
     },
 
     teacher: {
         password: Joi.string().trim(),
-        teacher_id: Joi.string().trim(),
         user_id: Joi.string().trim(),
         profile_image: Joi.string().allow(""),
         profile_type: Joi.string().trim(),
-        date_created: Joi.string().trim(),
         qualification: Joi.string().trim(),
         gender: Joi.string().trim(),
         DOB: Joi.string().trim(),
@@ -51,21 +45,21 @@ export default {
         mobile: Joi.string().trim(),
     },
 
-    create :{
-        class:Joi.string().trim(),
-    subject:Joi.string().trim(),
+    create: {
+        class: Joi.string().trim(),
+        subject: Joi.string().trim(),
     },
-    join:{
-        unique_code:Joi.string().trim(),
+    join: {
+        unique_code: Joi.string().trim(),
     },
-    accept:{
-        active:Joi.number(),
-        approved:Joi.number(),
+    accept: {
+        active: Joi.number(),
+        approved: Joi.number(),
     },
 
     user_master: {
         user_id: Joi.string().trim(),
-        
+
         active: Joi.string().trim(),
         approved: Joi.string().trim(),
         device_type: Joi.string().trim(),
@@ -73,8 +67,8 @@ export default {
         date_created: Joi.string().trim(),
         date_modified: Joi.string().trim(),
         user_type: Joi.string().trim()
-      },
-    
+    },
+
 }
 
 
