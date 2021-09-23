@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "sourceMap": true,
+    "outDir": "./build",
+    "rootDir": "./src",
+    "removeComments": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": false,
+    "noImplicitReturns": true,
+    "resolveJsonModule": true,
+    "noFallthroughCasesInSwitch": true,
+    "baseUrl": "./src",
+    "paths": {},
+    "typeRoots": [
+      "./node_modules/@types",
+      "./typings"
+    ],
+    "esModuleInterop": true
+  }
+}

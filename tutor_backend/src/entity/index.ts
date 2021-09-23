@@ -1,0 +1,1 @@
+export { default as UserV1 } from "./v1/user/user.ent.v1";
