@@ -51,9 +51,12 @@ export default {
     },
     join: {
         unique_code: Joi.string().trim(),
+        class_id:Joi.string().trim(),
     },
     accept: {
+        req_id:Joi.string().trim(),
         active: Joi.number(),
+        unique_code:Joi.string().trim(),
         approved: Joi.number(),
     },
 

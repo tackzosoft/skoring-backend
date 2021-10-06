@@ -19,6 +19,10 @@ Join_requestModule.init(
             type: DataTypes.INTEGER,
             allowNull: true,
         },
+        class_id:{
+            type: DataTypes.STRING,
+            allowNull: true,
+        }
 
 
     },

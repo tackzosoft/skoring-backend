@@ -3,6 +3,9 @@ import BaseEntity from "../../base.ent";
 import { helper } from "../../../services";
 import User_masterModule from "../../../models/user_master.mod";
 import Student_profileModule from "../../../models/student_profile.mod";
+import Join_requestModule from "../../../models/join_request_master.mod";
+import Accept_requestModule from "../../../models/accept_request_master.mod";
+import Create_classModule from "../../../models/class_master.mod";
 
 class StudentEntity extends BaseEntity {
     async register_student_data(payload: any): Promise<any> {
@@ -54,6 +57,51 @@ class StudentEntity extends BaseEntity {
         let check_user = await User_masterModule.findOne({ where: { email: email } })
         if (check_user) {
             return { success: true }
+        } else {
+            return { success: false }
+        }
+    }
+
+    async class_requested(payload: any, user: any): Promise<any> {
+        var req_id = helper.generateRandom("req_id");
+        let join_data = await Join_requestModule.create({
+            request_created_by: user.user_id,
+            unique_code: payload.unique_code,
+            req_id: req_id,
+            class_id:payload.class_id
+        })
+        if (join_data) {
+            let accept_data = await Accept_requestModule.create({
+                req_id: req_id,
+                active:1
+            })
+            if (accept_data) {
+                return { success: true, data: join_data.toJSON() }
+            }else{
+                return { success: false }
+            }
+
+        } else {
+            return { success: false }
+        }
+
+    }
+
+    async check_req(payload: any,user:any): Promise<any> {
+        // let unique_code = payload.unique_code
+        let check_user = await Join_requestModule.findOne({ where: { unique_code: payload.unique_code, request_created_by: user.user_id} })
+        if (check_user) {
+            return { success: true,data:check_user.toJSON() }
+        } else {
+            return { success: false }
+        }
+    }
+
+    async check_class(payload: any): Promise<any> {
+        // let unique_code = payload.unique_code
+        let check_user = await Create_classModule.findOne({ where: { unique_code: payload.unique_code, class_id: payload.class_id} })
+        if (check_user) {
+            return { success: true,data:check_user.toJSON() }
         } else {
             return { success: false }
         }

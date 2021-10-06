@@ -11,14 +11,10 @@ Class_studentModule.init(
             type: DataTypes.STRING,
             primaryKey: true,
         },
-        class_id: {
+        class_id:{
             type: DataTypes.STRING,
             allowNull: true,
-        },
-        class: {
-            type: DataTypes.STRING,
-            allowNull: true,
-        },
+        }
 
 
     },

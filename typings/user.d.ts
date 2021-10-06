@@ -157,11 +157,14 @@ export namespace Request {
   }
 
   interface Join_classModule {
-    unique_code: number
+    unique_code: number,
+    class_id:string
   }
 
   interface Accept_requestModule {
     active: number,
-    approved: number
+    approved: number,
+    req_id:string,
+    unique_code:number
   }
 }

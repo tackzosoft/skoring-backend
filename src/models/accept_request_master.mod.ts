@@ -15,10 +15,6 @@ Accept_requestModule.init(
             type: DataTypes.STRING,
             allowNull: true,
         },
-        class_id: {
-            type: DataTypes.STRING,
-            allowNull: true,
-        },
         active: {
             type: DataTypes.INTEGER,
             allowNull: true,

@@ -19,24 +19,14 @@ export default function (router: Router) {
         }
     );
 
-    router.post(
-        "/join_class", auth,
-        celebrate({
-            body: {
-                unique_code:validation.join.unique_code
-            },
-        }),
-        (req, res, next) => {
-            classCtrV1.join_class(req, res, next);
-        }
-    );
-
     router.put(
         "/accept_request", auth,
         celebrate({
             body: {
+                req_id:validation.accept.req_id,
                 active:validation.accept.active,
-                approved:validation.accept.approved
+                approved:validation.accept.approved,
+                unique_code:validation.accept.unique_code
             },
         }),
         (req, res, next) => {

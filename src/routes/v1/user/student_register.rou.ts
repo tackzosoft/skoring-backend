@@ -3,6 +3,7 @@ import { celebrate } from "celebrate";
 // import auth from "../../../middleware/auth";
 import { validation } from "../../../common";
 import { studentCtrV1 } from "../../../controllers/v1/user/student.ctr";
+import auth from "../../../middleware/auth";
 
 export default function (router: Router) {
 
@@ -25,7 +26,19 @@ export default function (router: Router) {
             studentCtrV1.register_student(req, res, next);
         }
     );
-
+ 
+    router.post(
+        "/join_class", auth,
+        celebrate({
+            body: {
+                unique_code:validation.join.unique_code,
+                class_id:validation.join.class_id
+            },
+        }),
+        (req, res, next) => {
+            studentCtrV1.join_class(req, res, next);
+        }
+    );
     
     return router;
 }
