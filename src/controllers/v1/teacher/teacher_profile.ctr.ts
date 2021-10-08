@@ -33,7 +33,7 @@ class ProfileCtrClass extends BaseCtr {
     async get_teacher_profile (req: IApp.IRequest, res: Response, next: NextFunction) {
         try { 
             // let payload: IUser.Request.Teacher_profileModule = req.body;
-            let check_user = await UserV1.check_user(req.user);
+            let check_user = await UserV1.get_user_data_by_user_id(req.user);
 
             if (check_user.success == true) {
                 let get_data = await UpdProfile.teacher_profile(req.user);

@@ -36,8 +36,8 @@ class ProfileEntity extends BaseEntity {
     }
 
     async teacher_profile(user: any): Promise<any> {
-        let email = user.email
-        let profile = await Teacher_profileModule.findOne({ where: { email:email }})
+        let user_id = user.user_id
+        let profile = await Teacher_profileModule.findOne({ where: { user_id:user_id }})
         if (profile) {
 
             return { success: true,data: profile.toJSON() }
