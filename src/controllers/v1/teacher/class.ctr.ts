@@ -36,7 +36,48 @@ class ClassCtrClass extends BaseCtr {
         }
     }
 
+    async get_class (req: IApp.IRequest, res: Response, next: NextFunction) {
+        try { 
+            // let payload: IUser.Request.Teacher_profileModule = req.body;
+            let check_user = await UserV1.get_user_data_by_user_id(req.user);
 
+            if (check_user.success == true) {
+                let get_data = await ClassV1.get_classes(req.user);
+                // console.log(req.user)
+                if (get_data.success == true) {
+                      let class_data =  get_data.data
+                    this.sendResponse(res, success.default, class_data )
+                } else {
+                    this.sendResponse(res, error.user.user_not_found);
+                }
+            } else {
+                this.sendResponse(res, error.user.user_not_register);
+            }
+        } catch (err) {
+            next(err)
+        }
+    }
+
+    async get_request (req: IApp.IRequest, res: Response, next: NextFunction) {
+        try { 
+            let payload: IUser.Request.Get_requests = req.body;
+            let check_user = await ClassV1.check_teacher(req.user);
+
+            if (check_user.success == true) {
+                let get_data = await ClassV1.get_requests(payload);
+                if (get_data.success == true) {
+                      let class_data =  get_data.data
+                    this.sendResponse(res, success.default, class_data )
+                } else {
+                    this.sendResponse(res, error.user.user_not_found);
+                }
+            } else {
+                this.sendResponse(res, error.user.user_not_register);
+            }
+        } catch (err) {
+            next(err)
+        }
+    }
 
     async accept_request(req: IApp.IRequest, res: Response, next: NextFunction) {
         try {

@@ -19,6 +19,25 @@ export default function (router: Router) {
         }
     );
 
+    router.get(
+        "/get_class", auth,
+        (req, res, next) => {
+            classCtrV1.get_class(req, res, next);
+        }
+    );
+
+    router.post(
+        "/get_request", auth,
+        celebrate({
+            body: {
+                class_id: validation.join.class_id
+            },
+        }),
+        (req, res, next) => {
+            classCtrV1.get_request(req, res, next);
+        }
+    );
+
     router.put(
         "/accept_request", auth,
         celebrate({

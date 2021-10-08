@@ -6,6 +6,7 @@ import Create_classModule from "../../../models/class_master.mod";
 import Join_classModule from "../../../models/join_request_master.mod";
 import Accept_requestModule from "../../../models/accept_request_master.mod";
 import Class_studentModule from "../../../models/class_student_master.mod";
+import Join_requestModule from "../../../models/join_request_master.mod";
 
 class ClassEntity extends BaseEntity {
 
@@ -56,6 +57,26 @@ class ClassEntity extends BaseEntity {
 
     }
 
+    async get_classes(user: any): Promise<any> {
+        let created_by = user.user_id
+        let check_user = await Create_classModule.findAll({ where: { created_by:created_by } })
+        if (check_user) {
+            return { success: true,data:check_user }
+        } else {
+            return { success: false }
+        }
+    }
+
+    async get_requests(payload: any): Promise<any> {
+        let class_id = payload.class_id
+        let check_user = await Join_requestModule.findAll({ where: { class_id:class_id } })
+        if (check_user) {
+            return { success: true,data:check_user }
+        } else {
+            return { success: false }
+        }
+    }
+
     async check_req(payload: any): Promise<any> {
         let req_id = payload.req_id
         let check_user = await Join_classModule.findOne({ where: { req_id: req_id , unique_code: payload.unique_code } })
@@ -71,6 +92,16 @@ class ClassEntity extends BaseEntity {
         let check_user = await Class_studentModule.findOne({ where: { student_id: student_id} })
         if (check_user) {
             return { success: true,data:check_user.toJSON() }
+        } else {
+            return { success: false }
+        }
+    }
+
+    async check_teacher(user: any): Promise<any> {
+        let created_by = user.user_id
+        let check_user = await Create_classModule.findOne({ where: { created_by:created_by  } })
+        if (check_user) {
+            return { success: true,data:check_user }
         } else {
             return { success: false }
         }
