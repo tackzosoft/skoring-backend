@@ -14,6 +14,26 @@ class UserEntity extends BaseEntity {
         }
     }
 
+    async check_email(payload: any): Promise<any> {
+        let email = payload.email
+        let check_user = await User_masterModule.findOne({ where: { email: email  } })
+        if (check_user) {
+            return { success: true ,  data:check_user.toJSON()}
+        } else {
+            return { success: false }
+        }
+    }
+
+    async check_phone(payload: any): Promise<any> {
+        let mobile = payload.mobile
+        let check_user = await User_masterModule.findOne({ where: {mobile:mobile } })
+        if (check_user) {
+            return { success: true, data:check_user.toJSON() }
+        } else {
+            return { success: false }
+        }
+    }
+
     async get_user_details(payload: any): Promise<any> {
         let email = payload.email;
         let user_auth = await User_masterModule.findOne({ where: { email: email } })

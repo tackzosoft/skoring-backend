@@ -21,6 +21,7 @@ class OnBoardCtrClass extends BaseCtr {
             let payload: IUser.Request.LoginUser = req.body;
             let check_user = await UserV1.check_user(payload)
             if (check_user.success == true) {
+                
 
                 let user_auth = await UserV1.get_user_details(payload)
                 if (user_auth.success == true) {

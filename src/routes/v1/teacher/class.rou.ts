@@ -50,17 +50,18 @@ export default function (router: Router) {
         }
     );
 
-    // router.post(
-    //     "/remove_student", auth,
-    //     celebrate({
-    //         body: {
-                
-    //         },
-    //     }),
-    //     (req, res, next) => {
-    //         classCtrV1.get_class_student(req, res, next);
-    //     }
-    // );
+    router.post(
+        "/remove_student", auth,
+        celebrate({
+            body: {
+                student_id:validation.remove.student_id,
+                req_id: validation.remove.req_id
+            },
+        }),
+        (req, res, next) => {
+            classCtrV1.remove_student(req, res, next);
+        }
+    );
 
     router.post(
         "/accept_request", auth,

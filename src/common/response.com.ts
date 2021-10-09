@@ -4,6 +4,7 @@ export const success = {
   already_accepted: { httpCode: 200, statusCode: 200, message: "Request_accepted already" },
   rejected: { httpCode: 200, statusCode: 200, message: "Request_rejected" },
   requested: { httpCode: 200, statusCode: 200, message: "Request_sent" },
+  removed: { httpCode: 200, statusCode: 200, message: "student removed" },
 };
 
 export const error = {
@@ -11,6 +12,7 @@ export const error = {
     user_not_register: { httpCode: 400, statusCode: 401, message: "something went wrong try again" },
     user_already: { httpCode: 400, statusCode: 402, message: "User already exist" },
     student_already: { httpCode: 400, statusCode: 402, message: "request accepted && Student already exist" },
+    removed_already: { httpCode: 400, statusCode: 402, message: "student_already removed" },
     request_already: { httpCode: 400, statusCode: 402, message: "request already send" },
     user_not_found: { httpCode: 400, statusCode: 403, message: "user not found" },
     credential_not_match: { httpCode: 400, statusCode: 404, message: "Email and password not match" },

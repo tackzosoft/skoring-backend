@@ -108,34 +108,78 @@ class ClassCtrClass extends BaseCtr {
             if (check_student.success === true) {
                 let check_req = await ClassV1.check_req(payload)
                 if (check_req.success === true) {
-                    if (payload.approved == 1) {
-                        let check_student = await ClassV1.check_student(check_req.data)
-                        if (check_student.success === false) {
-                            let enter_data = await ClassV1.class_student(check_req.data)
-                            if (enter_data.success === true) {
-                                let update_status = await ClassV1.accepted_request(payload)
-                                if (update_status.success === true) {
-                                    this.sendResponse(res, success.accepted)
+                    let check_active = await ClassV1.available_student(check_req.data)
+                    if (check_active.success === false) {
+                        if (payload.approved == 1) {
+                            let check_student = await ClassV1.check_student(check_req.data)
+                            if (check_student.success === false) {
+                                let enter_data = await ClassV1.class_student(check_req.data)
+                                if (enter_data.success === true) {
+                                    let update_status = await ClassV1.accepted_request(payload)
+                                    if (update_status.success === true) {
+                                        this.sendResponse(res, success.accepted)
+                                    } else {
+                                        this.sendResponse(res, error.user.user_not_register)
+                                    }
                                 } else {
                                     this.sendResponse(res, error.user.user_not_register)
                                 }
                             } else {
-                                this.sendResponse(res, error.user.user_not_register)
+                                this.sendResponse(res, success.already_accepted)
                             }
                         } else {
-                            this.sendResponse(res, success.already_accepted)
+                            let request_rejected = await ClassV1.rejected_request(payload)
+                            if (request_rejected.success === true) {
+                                this.sendResponse(res, success.rejected)
+                            }
                         }
                     } else {
-                        let request_rejected = await ClassV1.rejected_request(payload, req.user)
-                        if (request_rejected.success === true) {
-                            this.sendResponse(res, success.rejected)
+                        if (payload.approved == 1) {
+                            let accept_again = await ClassV1.accepted_again(check_req.data)
+                            if (accept_again.success === true) {
+                                this.sendResponse(res, success.accepted)
+                            }
+                        } else {
+                            let request_rejected = await ClassV1.rejected_request(payload)
+                            if (request_rejected.success === true) {
+                                this.sendResponse(res, success.rejected)
+                            }
                         }
+
                     }
+
                 } else {
                     this.sendResponse(res, error.user.user_not_register)
                 }
             } else {
                 this.sendResponse(res, error.user.user_already)
+            }
+        } catch (err) {
+            next(err)
+        }
+    }
+
+    async remove_student(req: IApp.IRequest, res: Response, next: NextFunction) {
+        try {
+            let payload: IUser.Request.remove_students = req.body;
+            let check_user = await ClassV1.check_teacher(req.user);
+            if (check_user.success == true) {
+                let get_data = await ClassV1.check_students(payload);
+                if (get_data.success == true) {
+                    let remove = await ClassV1.removed_student(payload)
+                    if(remove.success === true) {
+                        let update_to_student = await ClassV1.rejected_request(payload)
+                        if(update_to_student.success === true) {
+                            this.sendResponse(res, success.removed)
+                        }
+                    }else{
+                        this.sendResponse(res, error.user.removed_already);
+                    }
+                } else {
+                    this.sendResponse(res, error.user.user_not_found);
+                }
+            } else {
+                this.sendResponse(res, error.user.user_not_register);
             }
         } catch (err) {
             next(err)

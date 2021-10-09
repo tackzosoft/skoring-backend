@@ -20,16 +20,21 @@ class StudentCtrClass extends BaseCtr {
      */
 
     async register_student(req: Request, res: Response, next: NextFunction) {
-        let user: IUser.Request.User_masterModule = req.body;
+        // let user: IUser.Request.User_masterModule = req.body;
         let payload: IUser.Request.Student_profileModule = req.body;
-        let check_student = await UserV1.check_user(user)
+        let check_student = await UserV1.check_email(payload)
         if (check_student.success === false) {
-
-            let user_data = await StudentV1.register_student_data(payload);
-            if (user_data.success == true) {
-                this.sendResponse(res, success.default)
+            let check_phone = await UserV1.check_phone(payload)
+            // console.log(check_phone)
+            if (check_phone.success === true) {
+                this.sendResponse(res, error.user.user_already)
             } else {
-                this.sendResponse(res, error.user.user_not_register)
+                let user_data = await StudentV1.register_student_data(payload);
+                if (user_data.success == true) {
+                    this.sendResponse(res, success.default)
+                } else {
+                    this.sendResponse(res, error.user.user_not_register)
+                }
             }
         } else {
             this.sendResponse(res, error.user.user_already)

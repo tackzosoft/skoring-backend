@@ -53,6 +53,10 @@ export default {
         unique_code: Joi.number(),
         class_id:Joi.string().trim(),
     },
+    remove: {
+        student_id:Joi.string().trim(),
+        req_id:Joi.string().trim(),
+    },
     accept: {
         req_id:Joi.string().trim(),
         active: Joi.number(),

@@ -165,6 +165,10 @@ export namespace Request {
     class_id:string
   }
 
+  interface remove_students {
+    student_id:string
+  }
+
   interface Accept_requestModule {
     active: number,
     approved: number,
