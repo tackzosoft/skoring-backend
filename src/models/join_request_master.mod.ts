@@ -19,10 +19,22 @@ Join_requestModule.init(
             type: DataTypes.INTEGER,
             allowNull: true,
         },
-        class_id:{
+        status: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+        },
+        class_id: {
             type: DataTypes.STRING,
             allowNull: true,
-        }
+        },
+        name: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        profile_image: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
 
 
     },

@@ -158,7 +158,7 @@ export namespace Request {
 
   interface Join_classModule {
     unique_code: number,
-    class_id:string
+    status:number
   }
 
   interface Get_requests {

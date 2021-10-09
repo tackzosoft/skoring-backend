@@ -23,7 +23,7 @@ class ClassCtrClass extends BaseCtr {
                 if (class_create.success == true) {
                     let class_code = class_create.class_code
                     let class_id = class_create.class_id
-                    this.sendResponse(res, success.default, {class_code,class_id} )
+                    this.sendResponse(res, success.default, { class_code, class_id })
                 } else {
                     this.sendResponse(res, error.user.user_not_register)
                 }
@@ -36,8 +36,8 @@ class ClassCtrClass extends BaseCtr {
         }
     }
 
-    async get_class (req: IApp.IRequest, res: Response, next: NextFunction) {
-        try { 
+    async get_class(req: IApp.IRequest, res: Response, next: NextFunction) {
+        try {
             // let payload: IUser.Request.Teacher_profileModule = req.body;
             let check_user = await UserV1.get_user_data_by_user_id(req.user);
 
@@ -45,8 +45,8 @@ class ClassCtrClass extends BaseCtr {
                 let get_data = await ClassV1.get_classes(req.user);
                 // console.log(req.user)
                 if (get_data.success == true) {
-                      let class_data =  get_data.data
-                    this.sendResponse(res, success.default, class_data )
+                    let class_data = get_data.data
+                    this.sendResponse(res, success.default, class_data)
                 } else {
                     this.sendResponse(res, error.user.user_not_found);
                 }
@@ -58,16 +58,38 @@ class ClassCtrClass extends BaseCtr {
         }
     }
 
-    async get_request (req: IApp.IRequest, res: Response, next: NextFunction) {
-        try { 
+    async get_class_student(req: IApp.IRequest, res: Response, next: NextFunction) {
+        try {
+            let payload: IUser.Request.Get_requests = req.body;
+            let check_user = await UserV1.get_user_data_by_user_id(req.user);
+
+            if (check_user.success == true) {
+                let get_data = await ClassV1.get_classes_student(payload);
+                // console.log(req.user)
+                if (get_data.success == true) {
+                    let class_data = get_data.data
+                    this.sendResponse(res, success.default, class_data)
+                } else {
+                    this.sendResponse(res, error.user.user_not_found);
+                }
+            } else {
+                this.sendResponse(res, error.user.user_not_register);
+            }
+        } catch (err) {
+            next(err)
+        }
+    }
+
+    async get_request(req: IApp.IRequest, res: Response, next: NextFunction) {
+        try {
             let payload: IUser.Request.Get_requests = req.body;
             let check_user = await ClassV1.check_teacher(req.user);
 
             if (check_user.success == true) {
                 let get_data = await ClassV1.get_requests(payload);
                 if (get_data.success == true) {
-                      let class_data =  get_data.data
-                    this.sendResponse(res, success.default, class_data )
+                    let class_data = get_data.data
+                    this.sendResponse(res, success.default, class_data)
                 } else {
                     this.sendResponse(res, error.user.user_not_found);
                 }
@@ -86,21 +108,28 @@ class ClassCtrClass extends BaseCtr {
             if (check_student.success === true) {
                 let check_req = await ClassV1.check_req(payload)
                 if (check_req.success === true) {
-                    let join = await ClassV1.accepted_request(payload, req.user);
-                    if (join.success == true) {
+                    if (payload.approved == 1) {
                         let check_student = await ClassV1.check_student(check_req.data)
                         if (check_student.success === false) {
                             let enter_data = await ClassV1.class_student(check_req.data)
                             if (enter_data.success === true) {
-                                this.sendResponse(res, success.default)
+                                let update_status = await ClassV1.accepted_request(payload)
+                                if (update_status.success === true) {
+                                    this.sendResponse(res, success.accepted)
+                                } else {
+                                    this.sendResponse(res, error.user.user_not_register)
+                                }
                             } else {
                                 this.sendResponse(res, error.user.user_not_register)
                             }
                         } else {
-                            this.sendResponse(res, error.user.student_already)
+                            this.sendResponse(res, success.already_accepted)
                         }
                     } else {
-                        this.sendResponse(res, error.user.user_already)
+                        let request_rejected = await ClassV1.rejected_request(payload, req.user)
+                        if (request_rejected.success === true) {
+                            this.sendResponse(res, success.rejected)
+                        }
                     }
                 } else {
                     this.sendResponse(res, error.user.user_not_register)

@@ -32,7 +32,6 @@ export default function (router: Router) {
         celebrate({
             body: {
                 unique_code:validation.join.unique_code,
-                class_id:validation.join.class_id
             },
         }),
         (req, res, next) => {

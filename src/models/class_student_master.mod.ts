@@ -14,8 +14,23 @@ Class_studentModule.init(
         class_id:{
             type: DataTypes.STRING,
             allowNull: true,
-        }
-
+        },
+        req_id:{
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        name: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        profile_image: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        active: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+        },
 
     },
     {

@@ -38,14 +38,36 @@ export default function (router: Router) {
         }
     );
 
-    router.put(
+    router.post(
+        "/get_class_student", auth,
+        celebrate({
+            body: {
+                class_id: validation.join.class_id
+            },
+        }),
+        (req, res, next) => {
+            classCtrV1.get_class_student(req, res, next);
+        }
+    );
+
+    // router.post(
+    //     "/remove_student", auth,
+    //     celebrate({
+    //         body: {
+                
+    //         },
+    //     }),
+    //     (req, res, next) => {
+    //         classCtrV1.get_class_student(req, res, next);
+    //     }
+    // );
+
+    router.post(
         "/accept_request", auth,
         celebrate({
             body: {
                 req_id:validation.accept.req_id,
-                active:validation.accept.active,
-                approved:validation.accept.approved,
-                unique_code:validation.accept.unique_code
+                approved:validation.accept.approved
             },
         }),
         (req, res, next) => {

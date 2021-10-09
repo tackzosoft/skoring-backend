@@ -50,19 +50,17 @@ export default {
         subject: Joi.string().trim(),
     },
     join: {
-        unique_code: Joi.string().trim(),
+        unique_code: Joi.number(),
         class_id:Joi.string().trim(),
     },
     accept: {
         req_id:Joi.string().trim(),
         active: Joi.number(),
-        unique_code:Joi.string().trim(),
         approved: Joi.number(),
     },
 
     user_master: {
         user_id: Joi.string().trim(),
-
         active: Joi.string().trim(),
         approved: Joi.string().trim(),
         device_type: Joi.string().trim(),
