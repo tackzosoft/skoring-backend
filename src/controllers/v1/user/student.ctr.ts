@@ -27,7 +27,7 @@ class StudentCtrClass extends BaseCtr {
             let check_phone = await UserV1.check_phone(payload)
             // console.log(check_phone)
             if (check_phone.success === true) {
-                this.sendResponse(res, error.user.user_already)
+                this.sendResponse(res, error.user.phone_number_already)
             } else {
                 let user_data = await StudentV1.register_student_data(payload);
                 if (user_data.success == true) {
@@ -37,7 +37,7 @@ class StudentCtrClass extends BaseCtr {
                 }
             }
         } else {
-            this.sendResponse(res, error.user.user_already)
+            this.sendResponse(res, error.user.email_already)
         }
     }
 

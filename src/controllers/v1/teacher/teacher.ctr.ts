@@ -30,10 +30,10 @@ class TeacherCtrClass extends BaseCtr {
                         this.sendResponse(res, error.user.user_not_register)
                     }
                 } else {
-                    this.sendResponse(res, error.user.user_already)
+                    this.sendResponse(res, error.user.phone_number_already)
                 }
             } else {
-                this.sendResponse(res, error.user.user_already)
+                this.sendResponse(res, error.user.email_already)
             }
         } catch (err) {
             next(err)
