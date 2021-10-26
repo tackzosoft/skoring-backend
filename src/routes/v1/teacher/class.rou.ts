@@ -5,7 +5,7 @@ import { validation } from "../../../common";
 import { classCtrV1 } from "../../../controllers/v1/teacher/class.ctr";
 
 export default function (router: Router) {
-    
+
     router.post(
         "/create_class", auth,
         celebrate({
@@ -54,7 +54,7 @@ export default function (router: Router) {
         "/remove_student", auth,
         celebrate({
             body: {
-                student_id:validation.remove.student_id,
+                student_id: validation.remove.student_id,
                 req_id: validation.remove.req_id
             },
         }),
@@ -67,12 +67,25 @@ export default function (router: Router) {
         "/accept_request", auth,
         celebrate({
             body: {
-                req_id:validation.accept.req_id,
-                approved:validation.accept.approved
+                req_id: validation.accept.req_id,
+                approved: validation.accept.approved
             },
         }),
         (req, res, next) => {
             classCtrV1.accept_request(req, res, next);
+        }
+    );
+
+    router.post(
+        "/invite_student", auth,
+        celebrate({
+            body: {
+                student_id: validation.invite_student.student_id,
+                class_id: validation.invite_student.class_id
+            }
+        }),
+        (req, res, next) => {
+            classCtrV1.add_student(req, res, next)
         }
     );
     return router;

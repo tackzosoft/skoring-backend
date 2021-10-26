@@ -6,6 +6,8 @@ import Create_classModule from "../../../models/class_master.mod";
 import Join_classModule from "../../../models/join_request_master.mod";
 import Class_studentModule from "../../../models/class_student_master.mod";
 import Join_requestModule from "../../../models/join_request_master.mod";
+import Add_student_requestModule from "../../../models/add_student_request_master.mod";
+// import { userInfo } from "os";
 
 class ClassEntity extends BaseEntity {
 
@@ -31,7 +33,7 @@ class ClassEntity extends BaseEntity {
         let join_data = await Join_requestModule.update({
             status: 1,
         },
-        {where:{req_id: payload.req_id}})
+            { where: { req_id: payload.req_id } })
         if (join_data) {
             return { success: true, data: join_data }
         } else {
@@ -40,24 +42,23 @@ class ClassEntity extends BaseEntity {
 
     }
 
-    // async accepts_request(payload: any): Promise<any> {
-    //     let join_data = await Class_studentModule.update({
-    //         active: 1,
-    //     },
-    //     {where:{req_id: payload.req_id}})
-    //     if (join_data) {
-    //         return { success: true, data: join_data }
-    //     } else {
-    //         return { success: false }
-    //     }
+    async accept_request(payload: any): Promise<any> {
+        let join_data = await Join_requestModule.update({
+            status: 1,
+        },
+            { where: { request_created_by: payload.student_id, class_id: payload.class_id } })
+        if (join_data) {
+            return { success: true, data: join_data }
+        } else {
+            return { success: false }
+        }
 
-    // }
-
+    }
     async rejected_request(payload: any): Promise<any> {
         let join_data = await Join_requestModule.update({
             status: 2,
         },
-        {where:{req_id: payload.req_id}})
+            { where: { req_id: payload.req_id } })
         if (join_data) {
             return { success: true, data: join_data }
         } else {
@@ -70,7 +71,7 @@ class ClassEntity extends BaseEntity {
         let join_data = await Class_studentModule.update({
             active: 1,
         },
-        {where:{req_id: req.req_id,student_id :req.request_created_by}})
+            { where: { req_id: req.req_id, student_id: req.request_created_by } })
         if (join_data) {
             return { success: true, data: join_data }
         } else {
@@ -87,8 +88,26 @@ class ClassEntity extends BaseEntity {
             class_id: req.class_id,
             name: req.name,
             profile_image: req.profile_image,
-            req_id:req.req_id,
-            active:1
+            req_id: req.req_id,
+            active: 1
+        })
+        if (class_data) {
+            return { success: true, data: class_data.toJSON() }
+        } else {
+            return { success: false }
+        }
+
+    }
+
+    async add_student_request(payload: any, user: any): Promise<any> {
+        var req_id = helper.generateRandom("req_id");
+        let class_data = await Add_student_requestModule.create({
+            student_id: payload.student_id,
+            class_id: payload.class_id,
+            req_id: req_id,
+            status: 0,
+            request_created_by: user.user_id,
+            active: 1
         })
         if (class_data) {
             return { success: true, data: class_data.toJSON() }
@@ -102,7 +121,7 @@ class ClassEntity extends BaseEntity {
         let join_data = await Class_studentModule.update({
             active: 0,
         },
-        {where:{student_id :payload.student_id,req_id:payload.req_id}})
+            { where: { student_id: payload.student_id, req_id: payload.req_id } })
         if (join_data) {
             return { success: true, data: join_data }
         } else {
@@ -123,7 +142,7 @@ class ClassEntity extends BaseEntity {
 
     async get_classes_student(payload: any): Promise<any> {
         let class_id = payload.class_id
-        let check_user = await Class_studentModule.findAll({ where: { class_id: class_id , active:1 } ,attributes:["student_id","req_id","class_id","name","profile_image"]})
+        let check_user = await Class_studentModule.findAll({ where: { class_id: class_id, active: 1 }, attributes: ["student_id", "req_id", "class_id", "name", "profile_image"] })
         if (check_user) {
             return { success: true, data: check_user }
         } else {
@@ -133,7 +152,7 @@ class ClassEntity extends BaseEntity {
 
     async get_requests(payload: any): Promise<any> {
         let class_id = payload.class_id
-        let check_user = await Join_requestModule.findAll({ where: { class_id: class_id , status:0 } })
+        let check_user = await Join_requestModule.findAll({ where: { class_id: class_id, status: 0 } })
         if (check_user) {
             return { success: true, data: check_user }
         } else {
@@ -153,7 +172,17 @@ class ClassEntity extends BaseEntity {
 
     async check_students(payload: any): Promise<any> {
         let student_id = payload.student_id
-        let check_user = await Class_studentModule.findOne({ where: { student_id: student_id , req_id:payload.req_id} })
+        let check_user = await Class_studentModule.findOne({ where: { student_id: student_id, req_id: payload.req_id } })
+        if (check_user) {
+            return { success: true, data: check_user.toJSON() }
+        } else {
+            return { success: false }
+        }
+    }
+
+    async check_available_students(payload: any): Promise<any> {
+        let request_created_by = payload.student_id
+        let check_user = await Join_requestModule.findOne({ where: { request_created_by: request_created_by, class_id: payload.class_id } })
         if (check_user) {
             return { success: true, data: check_user.toJSON() }
         } else {
@@ -163,7 +192,17 @@ class ClassEntity extends BaseEntity {
 
     async check_student(req: any): Promise<any> {
         let student_id = req.request_created_by
-        let check_user = await Class_studentModule.findOne({ where: { student_id: student_id, req_id:req.req_id ,active:1} })
+        let check_user = await Class_studentModule.findOne({ where: { student_id: student_id, req_id: req.req_id, active: 1 } })
+        if (check_user) {
+            return { success: true, data: check_user.toJSON() }
+        } else {
+            return { success: false }
+        }
+    }
+
+    async check_invited_student(payload: any): Promise<any> {
+        let student_id = payload.student_id
+        let check_user = await Add_student_requestModule.findOne({ where: { student_id: student_id, class_id: payload.class_id } })
         if (check_user) {
             return { success: true, data: check_user.toJSON() }
         } else {
@@ -173,7 +212,7 @@ class ClassEntity extends BaseEntity {
 
     async available_student(req: any): Promise<any> {
         let student_id = req.request_created_by
-        let check_user = await Class_studentModule.findOne({ where: { student_id: student_id, req_id:req.req_id , active:0} })
+        let check_user = await Class_studentModule.findOne({ where: { student_id: student_id, req_id: req.req_id, active: 0 } })
         if (check_user) {
             return { success: true, data: check_user.toJSON() }
         } else {

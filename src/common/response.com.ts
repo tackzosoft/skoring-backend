@@ -14,6 +14,7 @@ export const error = {
     email_already: { httpCode: 400, statusCode: 402, message: "email already exist" },
     phone_number_already: { httpCode: 400, statusCode: 402, message: "phone_number already exist" },
     student_already: { httpCode: 400, statusCode: 402, message: "request accepted && Student already exist" },
+    student_already_invited: { httpCode: 400, statusCode: 402, message: "student_already_invited" },
     removed_already: { httpCode: 400, statusCode: 402, message: "student_already removed" },
     request_already: { httpCode: 400, statusCode: 402, message: "request already send" },
     user_not_found: { httpCode: 400, statusCode: 403, message: "user not found" },

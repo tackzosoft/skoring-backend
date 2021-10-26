@@ -167,17 +167,52 @@ class ClassCtrClass extends BaseCtr {
                 let get_data = await ClassV1.check_students(payload);
                 if (get_data.success == true) {
                     let remove = await ClassV1.removed_student(payload)
-                    if(remove.success === true) {
+                    if (remove.success === true) {
                         let update_to_student = await ClassV1.rejected_request(payload)
-                        if(update_to_student.success === true) {
+                        if (update_to_student.success === true) {
                             this.sendResponse(res, success.removed)
                         }
-                    }else{
+                    } else {
                         this.sendResponse(res, error.user.removed_already);
                     }
                 } else {
                     this.sendResponse(res, error.user.user_not_found);
                 }
+            } else {
+                this.sendResponse(res, error.user.user_not_register);
+            }
+        } catch (err) {
+            next(err)
+        }
+    }
+
+    async add_student(req: IApp.IRequest, res: Response, next: NextFunction) {
+        try {
+            let payload: IUser.Request.add_studeent = req.body;
+            let check_user = await ClassV1.check_teacher(req.user);
+            if (check_user.success == true) {
+                let get_data = await ClassV1.check_available_students(payload);
+                if (get_data.success == true) {
+                    let accept_request = await ClassV1.accept_request(payload);
+                    if (accept_request.success === true) {
+                        this.sendResponse(res, success.default);
+                    } else {
+                        this.sendResponse(res, error.user.user_not_found);
+                    }
+                } else {
+                    let check_student = await ClassV1.check_invited_student(payload)
+                    if (check_student.success === true) {
+                        let add_student_request = await ClassV1.add_student_request(payload, req.user)
+                        if (add_student_request.success === true) {
+                            this.sendResponse(res, success.default);
+                        } else {
+                            this.sendResponse(res, error.user.user_not_register);
+                        }
+                    } else {
+                        this.sendResponse(res, error.user.student_already_invited);
+                    }
+                }
+
             } else {
                 this.sendResponse(res, error.user.user_not_register);
             }

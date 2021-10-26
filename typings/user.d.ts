@@ -158,21 +158,44 @@ export namespace Request {
 
   interface Join_classModule {
     unique_code: number,
-    status:number
+    status: number
+  }
+  interface add_studeent {
+    class_id: string,
+    student_id: string,
+  }
+  interface add_chapter {
+    class_id: string,
+    chapter_name: string,
   }
 
+  interface add_topic {
+    class_id: string,
+    chp_id: string,
+    topics: Array<{ topic_name: string }>
+    topic_id:string,
+    topic_name:string
+  }
+
+  interface edit_topic {
+    chp_id: string,
+    topic_id:string,
+    topic_name:string
+  }
+
+
   interface Get_requests {
-    class_id:string
+    class_id: string
   }
 
   interface remove_students {
-    student_id:string
+    student_id: string
   }
 
   interface Accept_requestModule {
     active: number,
     approved: number,
-    req_id:string,
-    unique_code:number
+    req_id: string,
+    unique_code: number
   }
 }

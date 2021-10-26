@@ -12,6 +12,8 @@ export const generateRandom = function (type: string) {
     case 'user_id': return `user_${customAlphabet('1234567890abcdef', 12)()}`;
     case 'class_id': return `class_${customAlphabet('1234567890abcdef', 12)()}`;
     case 'req_id': return `req_${customAlphabet('1234567890abcdef', 12)()}`;
+    case 'chp_id': return `chp_${customAlphabet('1234567890abcdef', 12)()}`;
+    case 'topic_id': return `topic_${customAlphabet('1234567890abcdef', 12)()}`;
     case 'unique_code': return customAlphabet('123456', 6)();
     case 'salt': return customAlphabet('1234567890abcdef', 12)();
     case 'otp': {
@@ -20,7 +22,7 @@ export const generateRandom = function (type: string) {
     }
     case 'user_activation': return nanoid();
     case 'resetpassword_key': return nanoid();
-   
+
     default: return nanoid();
   }
 }
@@ -55,12 +57,12 @@ export const generateToken = function (userData: any): string {
  * @param userIdData
  * @param payload
  */
- export const authorize = function (userData: any,  payload: any): boolean {
-  return((userData.data.email  === payload.email) && userData.data.password === generateHash(payload.password, userData.data.password_salt))
+export const authorize = function (userData: any, payload: any): boolean {
+  return ((userData.data.email === payload.email) && userData.data.password === generateHash(payload.password, userData.data.password_salt))
 }
 
 export const change_password_authrize = function (userData: any, userIdData: any, payload: any): boolean {
-  return((userData.data.email || userData.data.email === payload.email) && userIdData.data.password === generateHash(payload.old_password, userIdData.data.password_salt))
+  return ((userData.data.email || userData.data.email === payload.email) && userIdData.data.password === generateHash(payload.old_password, userIdData.data.password_salt))
 }
 
 

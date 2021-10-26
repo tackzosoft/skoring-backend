@@ -51,18 +51,35 @@ export default {
     },
     join: {
         unique_code: Joi.number(),
-        class_id:Joi.string().trim(),
+        class_id: Joi.string().trim(),
     },
     remove: {
-        student_id:Joi.string().trim(),
-        req_id:Joi.string().trim(),
+        student_id: Joi.string().trim(),
+        req_id: Joi.string().trim(),
     },
     accept: {
-        req_id:Joi.string().trim(),
+        req_id: Joi.string().trim(),
         active: Joi.number(),
         approved: Joi.number(),
     },
 
+    invite_student: {
+        student_id: Joi.string().trim(),
+        class_id: Joi.string().trim(),
+    },
+    chapter: {
+        chp_id: Joi.string().trim(),
+        chapter_name: Joi.string().trim(),
+        class_id: Joi.string().trim(),
+    },
+
+    topic: {
+        chp_id: Joi.string().trim(),
+        topic_id: Joi.string().trim(),
+        topic_name: Joi.string().trim(),
+        class_id: Joi.string().trim(),
+        topics: Joi.array()
+    },
     user_master: {
         user_id: Joi.string().trim(),
         active: Joi.string().trim(),
