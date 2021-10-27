@@ -30,6 +30,10 @@ Topic_masterModule.init(
         topic_id: {
             type: DataTypes.STRING,
             allowNull: true,
+        },
+        active: {
+            type: DataTypes.INTEGER,
+            allowNull: true
         }
     },
     {

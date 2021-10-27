@@ -71,6 +71,7 @@ export default {
         chp_id: Joi.string().trim(),
         chapter_name: Joi.string().trim(),
         class_id: Joi.string().trim(),
+        month: Joi.number()
     },
 
     topic: {
@@ -78,7 +79,9 @@ export default {
         topic_id: Joi.string().trim(),
         topic_name: Joi.string().trim(),
         class_id: Joi.string().trim(),
-        topics: Joi.array()
+        topics: Joi.array(),
+        start_date: Joi.date(),
+        end_date: Joi.date()
     },
     user_master: {
         user_id: Joi.string().trim(),

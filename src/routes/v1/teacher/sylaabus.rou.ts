@@ -30,6 +30,13 @@ export default function (router: Router) {
         }
     );
 
+    router.get(
+        "/get_all_chapter", auth,
+        (req, res, next) => {
+            syllabusCtrV1.get_all_chapter(req, res, next);
+        }
+    );
+
     router.post(
         "/edit_chapter", auth,
         celebrate({
@@ -40,6 +47,32 @@ export default function (router: Router) {
         }),
         (req, res, next) => {
             syllabusCtrV1.edit_chapter(req, res, next);
+        }
+    );
+
+    router.post(
+        "/delete_chapter", auth,
+        celebrate({
+            body: {
+                chp_id: validation.chapter.chp_id,
+            }
+        }),
+        (req, res, next) => {
+            syllabusCtrV1.delete_chapter(req, res, next);
+        }
+    );
+
+    router.post(
+        "/assign_chapter_month", auth,
+        celebrate({
+            body: {
+                class_id: validation.chapter.class_id,
+                chp_id: validation.chapter.chp_id,
+                month: validation.chapter.month
+            }
+        }),
+        (req, res, next) => {
+            syllabusCtrV1.assign_chapter_month(req, res, next);
         }
     );
 
@@ -82,5 +115,34 @@ export default function (router: Router) {
             syllabusCtrV1.edit_topic(req, res, next);
         }
     );
+
+    router.post(
+        "/assign_date_topic", auth,
+        celebrate({
+            body: {
+                topic_id: validation.topic.topic_id,
+                start_date: validation.topic.start_date,
+                end_date: validation.topic.end_date,
+                chp_id: validation.topic.chp_id
+            }
+        }),
+        (req, res, next) => {
+            syllabusCtrV1.assign_date_topic(req, res, next);
+        }
+    );
+
+    router.post(
+        "/delete_topic", auth,
+        celebrate({
+            body: {
+                chp_id: validation.topic.chp_id,
+                topic_id: validation.topic.topic_id,
+            }
+        }),
+        (req, res, next) => {
+            syllabusCtrV1.delete_topic(req, res, next);
+        }
+    );
+
     return router;
 }

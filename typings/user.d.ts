@@ -167,20 +167,24 @@ export namespace Request {
   interface add_chapter {
     class_id: string,
     chapter_name: string,
+    month: number
   }
 
   interface add_topic {
     class_id: string,
     chp_id: string,
     topics: Array<{ topic_name: string }>
-    topic_id:string,
-    topic_name:string
+    topic_id: string,
+    topic_name: string,
+
   }
 
   interface edit_topic {
     chp_id: string,
-    topic_id:string,
-    topic_name:string
+    topic_id: string,
+    topic_name: string,
+    start_date: Date,
+    end_date: Date
   }
 
 

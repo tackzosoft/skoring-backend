@@ -79,12 +79,72 @@ class SyllabusCtrClass extends BaseCtr {
         }
     }
 
+    async get_all_chapter(req: IApp.IRequest, res: Response, next: NextFunction) {
+        try {
+
+            let check_chapter = await SyllabusV1.check_teacher_chapter(req.user);
+            if (check_chapter.success == true) {
+                let data = check_chapter.data
+                this.sendResponse(res, success.default, data)
+            } else {
+                this.sendResponse(res, error.user.user_not_register);
+            }
+        } catch (err) {
+            next(err)
+        }
+    }
+
     async edit_chapter(req: IApp.IRequest, res: Response, next: NextFunction) {
         try {
             let payload: IUser.Request.add_chapter = req.body;
             let check_user = await SyllabusV1.check_chapters(payload, req.user)
             if (check_user.success === true) {
                 let chapter_data = await SyllabusV1.update_chapter_data(payload)
+                if (chapter_data.success == true) {
+                    this.sendResponse(res, success.default)
+                } else {
+                    this.sendResponse(res, error.user.user_not_register);
+                }
+            } else {
+                this.sendResponse(res, error.user.chapter_not_found);
+            }
+
+        } catch (err) {
+            next(err)
+        }
+    }
+
+    async assign_chapter_month(req: IApp.IRequest, res: Response, next: NextFunction) {
+        try {
+            let payload: IUser.Request.add_chapter = req.body;
+            let check_user = await SyllabusV1.check_chapters(payload, req.user)
+            if (check_user.success === true) {
+                let check_month = await SyllabusV1.check_month(payload)
+                if (check_month.success === true) {
+                    let chapter_data = await SyllabusV1.assingn_month_to_chapter(payload)
+                    if (chapter_data.success == true) {
+                        this.sendResponse(res, success.default)
+                    } else {
+                        this.sendResponse(res, error.user.user_not_register);
+                    }
+                } else {
+                    this.sendResponse(res, error.user.month_already);
+                }
+            } else {
+                this.sendResponse(res, error.user.user_not_found);
+            }
+
+        } catch (err) {
+            next(err)
+        }
+    }
+
+    async delete_chapter(req: IApp.IRequest, res: Response, next: NextFunction) {
+        try {
+            let payload: IUser.Request.add_chapter = req.body;
+            let check_user = await SyllabusV1.check_chapters(payload, req.user)
+            if (check_user.success === true) {
+                let chapter_data = await SyllabusV1.delete_chapter_data(payload)
                 if (chapter_data.success == true) {
                     this.sendResponse(res, success.default)
                 } else {
@@ -124,11 +184,67 @@ class SyllabusCtrClass extends BaseCtr {
             let payload: IUser.Request.edit_topic = req.body;
             let check_user = await SyllabusV1.check_chapters(payload, req.user)
             if (check_user.success === true) {
-                let chapter_data = await SyllabusV1.update_topic_data(payload)
-                if (chapter_data.success == true) {
-                    this.sendResponse(res, success.default)
+                let check_topic = await SyllabusV1.check_topic(payload, req.user)
+                if (check_topic.success === true) {
+                    let chapter_data = await SyllabusV1.update_topic_data(payload)
+                    if (chapter_data.success == true) {
+                        this.sendResponse(res, success.default)
+                    } else {
+                        this.sendResponse(res, error.user.user_not_register);
+                    }
                 } else {
-                    this.sendResponse(res, error.user.user_not_register);
+                    this.sendResponse(res, error.user.topic_not_found);
+                }
+            } else {
+                this.sendResponse(res, error.user.user_not_found);
+            }
+
+        } catch (err) {
+            next(err)
+        }
+    }
+
+    async delete_topic(req: IApp.IRequest, res: Response, next: NextFunction) {
+        try {
+            let payload: IUser.Request.edit_topic = req.body;
+            console.log(payload)
+            let check_user = await SyllabusV1.check_chapters(payload, req.user)
+            if (check_user.success === true) {
+                let check_topic = await SyllabusV1.check_topic(payload, req.user)
+                if (check_topic.success === true) {
+                    let topic_delete = await SyllabusV1.delete_topic_data(payload)
+                    if (topic_delete.success == true) {
+                        this.sendResponse(res, success.default)
+                    } else {
+                        this.sendResponse(res, error.user.user_not_register);
+                    }
+                } else {
+                    this.sendResponse(res, error.user.topic_not_found);
+                }
+            } else {
+                this.sendResponse(res, error.user.user_not_found);
+            }
+
+        } catch (err) {
+            next(err)
+        }
+    }
+
+    async assign_date_topic(req: IApp.IRequest, res: Response, next: NextFunction) {
+        try {
+            let payload: IUser.Request.edit_topic = req.body;
+            let check_user = await SyllabusV1.check_chapters(payload, req.user)
+            if (check_user.success === true) {
+                let check_topic_date = await SyllabusV1.check_topic_date(payload)
+                if (check_topic_date.success === true) {
+                    let chapter_data = await SyllabusV1.assign_date_topic_data(payload)
+                    if (chapter_data.success == true) {
+                        this.sendResponse(res, success.default)
+                    } else {
+                        this.sendResponse(res, error.user.user_not_register);
+                    }
+                } else {
+                    this.sendResponse(res, error.user.topic_already);
                 }
             } else {
                 this.sendResponse(res, error.user.user_not_found);

@@ -14,6 +14,7 @@ class SyllabusEntity extends BaseEntity {
             class_id: payload.class_id,
             created_by: user.user_id,
             month: "",
+            active: 1
         })
         if (chapter_data) {
             return { success: true, data: chapter_data.toJSON() }
@@ -32,8 +33,9 @@ class SyllabusEntity extends BaseEntity {
             topic_name: payload.topic_name,
             class_id: user.class_id,
             created_by: user.created_by,
-            start_date: "",
-            end_date: ""
+            start_date: "0001-01-01",
+            end_date: "0001-01-01",
+            active: 1,
         })
         if (chapter_data) {
             return { success: true, data: chapter_data.toJSON() }
@@ -56,6 +58,19 @@ class SyllabusEntity extends BaseEntity {
         }
     }
 
+    async check_teacher_chapter(user: any): Promise<any> {
+        let user_id = user.user_id
+        let profile = await Chapter_masterModule.findAll({ where: { created_by: user_id, active: 1 }, attributes: ["chp_id", "chapter_name", "month"] })
+        if (profile) {
+
+            return { success: true, data: profile }
+        }
+        else {
+            return { success: false }
+
+        }
+    }
+
     async check_chapter(payload: any): Promise<any> {
         let chp_id = payload.chp_id
         let profile = await Chapter_masterModule.findOne({ where: { chp_id: chp_id, class_id: payload.class_id } })
@@ -71,7 +86,46 @@ class SyllabusEntity extends BaseEntity {
 
     async check_chapters(payload: any, user: any): Promise<any> {
         let chp_id = payload.chp_id
-        let profile = await Chapter_masterModule.findOne({ where: { chp_id: chp_id, created_by: user.user_id } })
+        let profile = await Chapter_masterModule.findOne({ where: { chp_id: chp_id, created_by: user.user_id, active: 1 } })
+        if (profile) {
+
+            return { success: true, data: profile.toJSON() }
+        }
+        else {
+            return { success: false }
+
+        }
+    }
+
+    async check_topic(payload: any, user: any): Promise<any> {
+        let topic_id = payload.topic_id
+        let profile = await Topic_masterModule.findOne({ where: { topic_id: topic_id, created_by: user.user_id, active: 1 } })
+        if (profile) {
+
+            return { success: true, data: profile.toJSON() }
+        }
+        else {
+            return { success: false }
+
+        }
+    }
+
+    async check_topic_date(payload: any): Promise<any> {
+        let topic_id = payload.topic_id
+        let profile = await Topic_masterModule.findOne({ where: { topic_id: topic_id, start_date!: "0001-01-01", active: 1 } })
+        if (profile) {
+
+            return { success: true, data: profile.toJSON() }
+        }
+        else {
+            return { success: false }
+
+        }
+    }
+
+    async check_month(payload: any): Promise<any> {
+        let chp_id = payload.chp_id
+        let profile = await Chapter_masterModule.findOne({ where: { chp_id: chp_id, month: 0 } })
         if (profile) {
 
             return { success: true, data: profile.toJSON() }
@@ -84,7 +138,7 @@ class SyllabusEntity extends BaseEntity {
 
     async get_chapter(payload: any): Promise<any> {
         // let chp_id = payload.chp_id
-        let profile = await Chapter_masterModule.findAll({ where: { class_id: payload.class_id }, raw: true })
+        let profile = await Chapter_masterModule.findAll({ where: { class_id: payload.class_id, active: 1 }, raw: true })
         if (profile) {
 
             return { success: true, data: profile }
@@ -95,9 +149,22 @@ class SyllabusEntity extends BaseEntity {
         }
     }
 
+    // async get_all_chapter(payload: any): Promise<any> {
+    //     // let chp_id = payload.chp_id
+    //     let profile = await Chapter_masterModule.findAll({ where: { class_id: payload.class_id }, raw: true })
+    //     if (profile) {
+
+    //         return { success: true, data: profile }
+    //     }
+    //     else {
+    //         return { success: false }
+
+    //     }
+    // }
+
     async get_topic(payload: any): Promise<any> {
         // let chp_id = payload.chp_id
-        let profile = await Topic_masterModule.findAll({ where: { chp_id: payload.chp_id }, raw: true })
+        let profile = await Topic_masterModule.findAll({ where: { chp_id: payload.chp_id, active: 1 }, raw: true })
         if (profile) {
 
             return { success: true, data: profile }
@@ -120,9 +187,61 @@ class SyllabusEntity extends BaseEntity {
         }
     }
 
+    async assingn_month_to_chapter(payload: any): Promise<any> {
+        let chapter_data = await Chapter_masterModule.update({
+            month: payload.month
+        },
+            { where: { chp_id: payload.chp_id, class_id: payload.class_id } })
+        if (chapter_data) {
+            return { success: true, data: chapter_data }
+        } else {
+            return { success: false }
+        }
+    }
+
+    async delete_chapter_data(payload: any): Promise<any> {
+        let chapter_data = await Chapter_masterModule.update({
+            active: 0,
+        },
+            { where: { chp_id: payload.chp_id } })
+        if (chapter_data) {
+            return { success: true, data: chapter_data }
+        } else {
+            return { success: false }
+        }
+    }
+
+
+
     async update_topic_data(payload: any): Promise<any> {
         let chapter_data = await Topic_masterModule.update({
             topic_name: payload.topic_name,
+        },
+            { where: { topic_id: payload.topic_id } })
+        if (chapter_data) {
+            return { success: true, data: chapter_data }
+        } else {
+            return { success: false }
+        }
+    }
+
+    async delete_topic_data(payload: any): Promise<any> {
+        // console.log(payload)
+        let chapter_data = await Topic_masterModule.update({
+            active: 0
+        },
+            { where: { topic_id: payload.topic_id, chp_id: payload.chp_id } })
+        if (chapter_data) {
+            return { success: true, data: chapter_data }
+        } else {
+            return { success: false }
+        }
+    }
+
+    async assign_date_topic_data(payload: any): Promise<any> {
+        let chapter_data = await Topic_masterModule.update({
+            start_date: payload.start_date,
+            end_date: payload.end_date
         },
             { where: { topic_id: payload.topic_id } })
         if (chapter_data) {

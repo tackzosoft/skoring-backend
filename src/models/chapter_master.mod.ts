@@ -19,6 +19,10 @@ Chapter_masterModule.init(
             type: DataTypes.INTEGER,
             allowNull: true,
         },
+        active: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+        },
         chapter_name: {
             type: DataTypes.STRING,
             allowNull: true,
