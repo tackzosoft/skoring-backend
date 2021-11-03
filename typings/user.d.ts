@@ -166,6 +166,7 @@ export namespace Request {
   }
   interface add_chapter {
     class_id: string,
+    chapters:Array<[]>
     chapter_name: string,
     month: number
   }

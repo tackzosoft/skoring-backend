@@ -97,6 +97,19 @@ class SyllabusEntity extends BaseEntity {
         }
     }
 
+    async check_class(payload: any, user: any): Promise<any> {
+        let class_id = payload.class_id
+        let profile = await Create_classModule.findOne({ where: { class_id: class_id, created_by: user.user_id } })
+        if (profile) {
+
+            return { success: true, data: profile.toJSON() }
+        }
+        else {
+            return { success: false }
+
+        }
+    }
+
     async check_topic(payload: any, user: any): Promise<any> {
         let topic_id = payload.topic_id
         let profile = await Topic_masterModule.findOne({ where: { topic_id: topic_id, created_by: user.user_id, active: 1 } })
@@ -187,11 +200,12 @@ class SyllabusEntity extends BaseEntity {
         }
     }
 
-    async assingn_month_to_chapter(payload: any): Promise<any> {
+    async assingn_month_to_chapter(list_of_chp: any, payload: any): Promise<any> {
+        let chapters_list = list_of_chp.chp_id
         let chapter_data = await Chapter_masterModule.update({
             month: payload.month
         },
-            { where: { chp_id: payload.chp_id, class_id: payload.class_id } })
+            { where: { chp_id: chapters_list, class_id: payload.class_id } })
         if (chapter_data) {
             return { success: true, data: chapter_data }
         } else {

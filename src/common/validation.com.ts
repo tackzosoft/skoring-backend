@@ -68,6 +68,7 @@ export default {
         class_id: Joi.string().trim(),
     },
     chapter: {
+        chapters: Joi.array(),
         chp_id: Joi.string().trim(),
         chapter_name: Joi.string().trim(),
         class_id: Joi.string().trim(),

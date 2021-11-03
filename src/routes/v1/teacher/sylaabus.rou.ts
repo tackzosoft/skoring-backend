@@ -67,7 +67,7 @@ export default function (router: Router) {
         celebrate({
             body: {
                 class_id: validation.chapter.class_id,
-                chp_id: validation.chapter.chp_id,
+                chapters: validation.chapter.chapters,
                 month: validation.chapter.month
             }
         }),

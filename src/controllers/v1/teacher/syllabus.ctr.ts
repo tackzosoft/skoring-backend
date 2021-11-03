@@ -117,19 +117,16 @@ class SyllabusCtrClass extends BaseCtr {
     async assign_chapter_month(req: IApp.IRequest, res: Response, next: NextFunction) {
         try {
             let payload: IUser.Request.add_chapter = req.body;
-            let check_user = await SyllabusV1.check_chapters(payload, req.user)
+            let check_user = await SyllabusV1.check_class(payload, req.user)
             if (check_user.success === true) {
-                let check_month = await SyllabusV1.check_month(payload)
-                if (check_month.success === true) {
-                    let chapter_data = await SyllabusV1.assingn_month_to_chapter(payload)
-                    if (chapter_data.success == true) {
+                let chapters_data = payload.chapters;
+                chapters_data.map(async (list_of_chp: any) => {
+                    let chapter_data = await SyllabusV1.assingn_month_to_chapter(list_of_chp, payload)
+                    if (list_of_chp == chapters_data[chapters_data.length - 1]) {
+                        console.log(chapter_data)
                         this.sendResponse(res, success.default)
-                    } else {
-                        this.sendResponse(res, error.user.user_not_register);
                     }
-                } else {
-                    this.sendResponse(res, error.user.month_already);
-                }
+                })
             } else {
                 this.sendResponse(res, error.user.user_not_found);
             }
