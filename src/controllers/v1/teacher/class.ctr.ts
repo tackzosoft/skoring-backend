@@ -228,7 +228,7 @@ class ClassCtrClass extends BaseCtr {
             if (check_user.success === true) {
                 let check_attendence = await ClassV1.check_attendence(payload);
                 console.log(check_attendence.data)
-                if (check_attendence.data === []) {
+                if (check_attendence.success === true) {
                     let student_list = payload.students
                     student_list.map(async (attendence_student: any) => {
                         let check_student = await ClassV1.check_student_attendence(attendence_student, payload)
@@ -262,6 +262,26 @@ class ClassCtrClass extends BaseCtr {
                 this.sendResponse(res, error.user.user_not_register);
             }
 
+        } catch (err) {
+            next(err)
+        }
+    }
+
+    async get_attendence(req: IApp.IRequest, res: Response, next: NextFunction) {
+        try {
+            let payload: IUser.Request.add_studeent = req.body;
+            let get_data = await ClassV1.get_student_attendence(payload, req.user);
+            if (get_data.success == true) {
+                let class_data = get_data.data
+                this.sendResponse(res, success.default, class_data)
+            } else {
+                let get_class_student = await ClassV1.get_class_student(payload);
+                if (get_class_student.success === true) {
+                    console.log(get_class_student.data)
+                    let class_data = get_class_student.data
+                    this.sendResponse(res, success.default, class_data)
+                }
+            }
         } catch (err) {
             next(err)
         }

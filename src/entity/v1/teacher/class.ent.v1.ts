@@ -8,7 +8,6 @@ import Class_studentModule from "../../../models/class_student_master.mod";
 import Join_requestModule from "../../../models/join_request_master.mod";
 import Add_student_requestModule from "../../../models/add_student_request_master.mod";
 import Attendence_masterModule from "../../../models/attendence_master.mod";
-// import { userInfo } from "os";
 
 class ClassEntity extends BaseEntity {
 
@@ -149,6 +148,16 @@ class ClassEntity extends BaseEntity {
 
     }
 
+    async get_student_attendence(payload: any, user: any): Promise<any> {
+        let class_id = payload.class_id
+        let check_user = await Attendence_masterModule.findAll({ where: { class_id: class_id, attendence_date: payload.attendence_date, teacher_id: user.user_id }, raw: true })
+        if (check_user) {
+            return { success: true, data: check_user }
+        } else {
+            return { success: false }
+        }
+    }
+
     async removed_student(payload: any): Promise<any> {
         let join_data = await Class_studentModule.update({
             active: 0,
@@ -175,6 +184,16 @@ class ClassEntity extends BaseEntity {
     async get_classes_student(payload: any): Promise<any> {
         let class_id = payload.class_id
         let check_user = await Class_studentModule.findAll({ where: { class_id: class_id, active: 1 }, attributes: ["student_id", "req_id", "class_id", "name", "profile_image"] })
+        if (check_user) {
+            return { success: true, data: check_user }
+        } else {
+            return { success: false }
+        }
+    }
+
+    async get_class_student(payload: any): Promise<any> {
+        let class_id = payload.class_id
+        let check_user = await Class_studentModule.findAll({ where: { class_id: class_id, active: 1 }, attributes: ["student_id", "class_id", "name", "profile_image"] })
         if (check_user) {
             return { success: true, data: check_user }
         } else {
@@ -243,11 +262,11 @@ class ClassEntity extends BaseEntity {
 
     async check_attendence(payload: any): Promise<any> {
         console.log(payload.attendence_date)
-        let check_user = await Attendence_masterModule.findAll({ where: { attendence_date: payload.attendence_date, class_id: payload.class_id }, raw: true })
+        let check_user = await Attendence_masterModule.findAll({ where: { attendence_date!: payload.attendence_date, class_id: payload.class_id }, raw: true })
         if (check_user) {
             return { success: true, data: check_user }
         } else {
-            return { success: false, data: check_user }
+            return { success: false }
         }
     }
 

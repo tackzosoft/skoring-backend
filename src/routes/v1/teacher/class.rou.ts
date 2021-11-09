@@ -101,5 +101,19 @@ export default function (router: Router) {
             classCtrV1.student_attendence(req, res, next)
         }
     );
+
+    router.post(
+        "/get_attendence", auth,
+        celebrate({
+            body: {
+                class_id: validation.invite_student.class_id,
+                attendence_date: validation.invite_student.attendence_date
+            }
+        }),
+        (req, res, next) => {
+            classCtrV1.get_attendence(req, res, next)
+        }
+    );
+
     return router;
 }
