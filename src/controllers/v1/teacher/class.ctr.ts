@@ -221,6 +221,52 @@ class ClassCtrClass extends BaseCtr {
         }
     }
 
+    async student_attendence(req: IApp.IRequest, res: Response, next: NextFunction) {
+        try {
+            let payload: IUser.Request.add_studeent = req.body;
+            let check_user = await ClassV1.check_teacher(req.user);
+            if (check_user.success === true) {
+                let check_attendence = await ClassV1.check_attendence(payload);
+                console.log(check_attendence.data)
+                if (check_attendence.data === []) {
+                    let student_list = payload.students
+                    student_list.map(async (attendence_student: any) => {
+                        let check_student = await ClassV1.check_student_attendence(attendence_student, payload)
+                        if (check_student.success === true) {
+                            let add_attendence = await ClassV1.student_attendence(attendence_student, payload, req.user)
+                            if (attendence_student == student_list[student_list.length - 1]) {
+                                console.log(add_attendence);
+                                this.sendResponse(res, success.default)
+                            }
+                        } else {
+                            this.sendResponse(res, error.user.student_not_found);
+                        }
+                    })
+                } else {
+                    console.log("abd")
+                    let student_list = payload.students
+                    student_list.map(async (attendence_student: any) => {
+                        let check_student = await ClassV1.check_student_attendence(attendence_student, payload)
+                        if (check_student.success === true) {
+                            let add_attendence = await ClassV1.update_student_attendence(attendence_student, payload)
+                            if (attendence_student == student_list[student_list.length - 1]) {
+                                console.log(add_attendence);
+                                this.sendResponse(res, success.default)
+                            }
+                        } else {
+                            this.sendResponse(res, error.user.student_not_found);
+                        }
+                    })
+                }
+            } else {
+                this.sendResponse(res, error.user.user_not_register);
+            }
+
+        } catch (err) {
+            next(err)
+        }
+    }
+
 }
 
 export const classCtrV1 = new ClassCtrClass();

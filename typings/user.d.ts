@@ -163,10 +163,12 @@ export namespace Request {
   interface add_studeent {
     class_id: string,
     student_id: string,
+    attendence_date: Date,
+    students: Array<[]>
   }
   interface add_chapter {
     class_id: string,
-    chapters:Array<[]>
+    chapters: Array<[]>
     chapter_name: string,
     month: number
   }

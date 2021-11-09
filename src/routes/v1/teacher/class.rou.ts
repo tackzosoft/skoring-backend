@@ -88,5 +88,18 @@ export default function (router: Router) {
             classCtrV1.add_student(req, res, next)
         }
     );
+    router.post(
+        "/attendence", auth,
+        celebrate({
+            body: {
+                class_id: validation.invite_student.class_id,
+                students: validation.invite_student.students,
+                attendence_date: validation.invite_student.attendence_date
+            }
+        }),
+        (req, res, next) => {
+            classCtrV1.student_attendence(req, res, next)
+        }
+    );
     return router;
 }

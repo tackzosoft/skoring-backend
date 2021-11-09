@@ -9,9 +9,10 @@ export const success = {
 
 export const error = {
   user: {
+    student_not_found: { httpCode: 400, statusCode: 401, message: "student not found in class" },
     user_not_register: { httpCode: 400, statusCode: 401, message: "something went wrong try again" },
     chapter_not_found: { httpCode: 400, statusCode: 401, message: "chapter_not_found" },
-    // topic_not_found: { httpCode: 400, statusCode: 401, message: "chapter_not_found" },
+    attendence_already: { httpCode: 400, statusCode: 401, message: "attendence_already_done" },
     user_already: { httpCode: 400, statusCode: 402, message: "User already exist" },
     month_already: { httpCode: 400, statusCode: 402, message: "Month already assigned" },
     topic_already: { httpCode: 400, statusCode: 402, message: "Topic date  already assigned" },

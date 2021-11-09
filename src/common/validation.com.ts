@@ -66,6 +66,8 @@ export default {
     invite_student: {
         student_id: Joi.string().trim(),
         class_id: Joi.string().trim(),
+        students: Joi.array(),
+        attendence_date: Joi.date()
     },
     chapter: {
         chapters: Joi.array(),

@@ -7,6 +7,7 @@ import Join_classModule from "../../../models/join_request_master.mod";
 import Class_studentModule from "../../../models/class_student_master.mod";
 import Join_requestModule from "../../../models/join_request_master.mod";
 import Add_student_requestModule from "../../../models/add_student_request_master.mod";
+import Attendence_masterModule from "../../../models/attendence_master.mod";
 // import { userInfo } from "os";
 
 class ClassEntity extends BaseEntity {
@@ -117,6 +118,37 @@ class ClassEntity extends BaseEntity {
 
     }
 
+    async student_attendence(student: any, payload: any, user: any): Promise<any> {
+        var attendence_id = helper.generateRandom("attendence_id");
+        let student_data = await Attendence_masterModule.create({
+            student_id: student.student_id,
+            class_id: payload.class_id,
+            teacher_id: user.user_id,
+            attendence: student.attendence,
+            attendence_id: attendence_id,
+            attendence_date: payload.attendence_date
+        })
+        if (student_data) {
+            return { success: true, data: student_data.toJSON() }
+        } else {
+            return { success: false }
+        }
+
+    }
+
+    async update_student_attendence(student: any, payload: any): Promise<any> {
+        let join_data = await Class_studentModule.update({
+            attendence: payload.attendence
+        },
+            { where: { student_id: student.student_id, class_id: payload.class_id } })
+        if (join_data) {
+            return { success: true, data: join_data }
+        } else {
+            return { success: false }
+        }
+
+    }
+
     async removed_student(payload: any): Promise<any> {
         let join_data = await Class_studentModule.update({
             active: 0,
@@ -197,6 +229,25 @@ class ClassEntity extends BaseEntity {
             return { success: true, data: check_user.toJSON() }
         } else {
             return { success: false }
+        }
+    }
+
+    async check_student_attendence(students: any, payload: any): Promise<any> {
+        let check_user = await Class_studentModule.findOne({ where: { student_id: students.student_id, class_id: payload.class_id } })
+        if (check_user) {
+            return { success: true, data: check_user.toJSON() }
+        } else {
+            return { success: false }
+        }
+    }
+
+    async check_attendence(payload: any): Promise<any> {
+        console.log(payload.attendence_date)
+        let check_user = await Attendence_masterModule.findAll({ where: { attendence_date: payload.attendence_date, class_id: payload.class_id }, raw: true })
+        if (check_user) {
+            return { success: true, data: check_user }
+        } else {
+            return { success: false, data: check_user }
         }
     }
 

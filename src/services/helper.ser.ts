@@ -13,6 +13,7 @@ export const generateRandom = function (type: string) {
     case 'class_id': return `class_${customAlphabet('1234567890abcdef', 12)()}`;
     case 'req_id': return `req_${customAlphabet('1234567890abcdef', 12)()}`;
     case 'chp_id': return `chp_${customAlphabet('1234567890abcdef', 12)()}`;
+    case 'attendence_id': return `attendence_${customAlphabet('1234567890abcdef', 12)()}`;
     case 'topic_id': return `topic_${customAlphabet('1234567890abcdef', 12)()}`;
     case 'unique_code': return customAlphabet('123456', 6)();
     case 'salt': return customAlphabet('1234567890abcdef', 12)();
