@@ -227,8 +227,9 @@ class ClassCtrClass extends BaseCtr {
             let check_user = await ClassV1.check_teacher(req.user);
             if (check_user.success === true) {
                 let check_attendence = await ClassV1.check_attendence(payload);
-                console.log(check_attendence.data)
-                if (check_attendence.success === true) {
+                // console.log(check_attendence.data)
+                let updateAttendence = check_attendence.data
+                if (updateAttendence.length == 0) {
                     let student_list = payload.students
                     student_list.map(async (attendence_student: any) => {
                         let check_student = await ClassV1.check_student_attendence(attendence_student, payload)
@@ -243,7 +244,7 @@ class ClassCtrClass extends BaseCtr {
                         }
                     })
                 } else {
-                    console.log("abd")
+                    // console.log("abd")
                     let student_list = payload.students
                     student_list.map(async (attendence_student: any) => {
                         let check_student = await ClassV1.check_student_attendence(attendence_student, payload)
@@ -271,16 +272,19 @@ class ClassCtrClass extends BaseCtr {
         try {
             let payload: IUser.Request.add_studeent = req.body;
             let get_data = await ClassV1.get_student_attendence(payload, req.user);
-            if (get_data.success == true) {
-                let class_data = get_data.data
-                this.sendResponse(res, success.default, class_data)
-            } else {
+            console.log(get_data.data)
+            let getData = get_data.data
+            if (getData.length == 0) {
+                console.log("abc")
                 let get_class_student = await ClassV1.get_class_student(payload);
                 if (get_class_student.success === true) {
                     console.log(get_class_student.data)
                     let class_data = get_class_student.data
                     this.sendResponse(res, success.default, class_data)
                 }
+            } else {
+                let class_data = get_data.data
+                this.sendResponse(res, success.default, class_data)
             }
         } catch (err) {
             next(err)

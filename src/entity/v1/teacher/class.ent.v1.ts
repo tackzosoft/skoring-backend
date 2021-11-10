@@ -154,6 +154,7 @@ class ClassEntity extends BaseEntity {
         if (check_user) {
             return { success: true, data: check_user }
         } else {
+            console.log(check_user)
             return { success: false }
         }
     }
@@ -261,8 +262,8 @@ class ClassEntity extends BaseEntity {
     }
 
     async check_attendence(payload: any): Promise<any> {
-        console.log(payload.attendence_date)
-        let check_user = await Attendence_masterModule.findAll({ where: { attendence_date!: payload.attendence_date, class_id: payload.class_id }, raw: true })
+        // console.log(payload.attendence_date)
+        let check_user = await Attendence_masterModule.findAll({ where: { attendence_date: payload.attendence_date, class_id: payload.class_id }, raw: true })
         if (check_user) {
             return { success: true, data: check_user }
         } else {
