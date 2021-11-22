@@ -69,6 +69,15 @@ export default {
         students: Joi.array(),
         attendence_date: Joi.date()
     },
+    assignment: {
+        student_id: Joi.string().trim(),
+        class_id: Joi.string().trim(),
+        assigment: Joi.array(),
+        dead_line: Joi.date(),
+        assigment_type: Joi.string().trim(),
+        assigment_id: Joi.string().trim(),
+        assigment_file: Joi.string().trim(),
+    },
     chapter: {
         chapters: Joi.array(),
         chp_id: Joi.string().trim(),

@@ -5,7 +5,7 @@ import User_masterModule from "../../../models/user_master.mod";
 import Teacher_profileModule from "../../../models/teacher_profile.mod";
 
 class TeacherEntity extends BaseEntity {
-    
+
     async register_teacher_data(payload: any): Promise<any> {
         var user_id = helper.generateRandom("user_id");
         var password_salt = helper.generateRandom("salt");
@@ -23,10 +23,12 @@ class TeacherEntity extends BaseEntity {
             qualification: payload.qualification,
             DOB: payload.DOB,
             gender: payload.gender,
-            profile_type:1
+            profile_type: 1,
+            active: 0,
+            approved: 0,
         })
         if (teacher_data) {
-            
+
             let register = await User_masterModule.create({
                 user_id: user_id,
                 profile_image: payload.profile_image,
@@ -36,8 +38,8 @@ class TeacherEntity extends BaseEntity {
                 password: password,
                 password_salt: password_salt,
                 mobile: payload.mobile,
-                active: 1,
-                approved: 1,
+                active: 0,
+                approved: 0,
                 date_created: payload.date_created,
                 date_modified: payload.date_modified,
                 user_type: 1

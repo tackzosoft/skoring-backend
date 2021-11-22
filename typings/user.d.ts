@@ -166,6 +166,14 @@ export namespace Request {
     attendence_date: Date,
     students: Array<[]>
   }
+  interface assigment {
+    class_id: string,
+    student_id: string,
+    dead_line: Date,
+    assigment: Array<[]>,
+    assigment_type: string,
+    assigment_file: string
+  }
   interface add_chapter {
     class_id: string,
     chapters: Array<[]>

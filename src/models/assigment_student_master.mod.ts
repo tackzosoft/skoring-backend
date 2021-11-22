@@ -1,39 +1,43 @@
 import { Model, DataTypes } from "sequelize";
 import { db } from "../services";
 
-export default class Attendence_masterModule extends Model {
-    student_id: any
-}
+export default class Assigment_student_masterModule extends Model {
 
-Attendence_masterModule.init(
+}
+Assigment_student_masterModule.init(
     {
-        teacher_id: {
+        assigment_id: {
             type: DataTypes.STRING,
-            primaryKey: true,
-        },
-        attendence_id: {
-            type: DataTypes.STRING,
-            primaryKey: true,
+            primaryKey: true
         },
         student_id: {
             type: DataTypes.STRING,
-            allowNull: true,
+            allowNull: true
         },
-        attendence: {
+        assigment_student_id: {
             type: DataTypes.STRING,
             allowNull: true,
         },
-        attendence_date: {
+        file: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        date_submit: {
             type: DataTypes.DATE,
             allowNull: true,
+
         },
-        class_id: {
-            type: DataTypes.STRING,
-            allowNull: true,
-        }
+        active: {
+            type: DataTypes.INTEGER,
+            allowNull: true
+        },
+        status: {
+            type: DataTypes.INTEGER,
+            allowNull: true
+        },
     },
     {
-        modelName: "attendance_master",
+        modelName: "assigment_student_master",
         timestamps: true,
         sequelize: db.mysql,
         createdAt: "date_created",

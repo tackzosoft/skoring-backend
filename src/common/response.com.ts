@@ -10,6 +10,7 @@ export const success = {
 export const error = {
   user: {
     student_not_found: { httpCode: 400, statusCode: 401, message: "student not found in class" },
+    request_not_found: { httpCode: 400, statusCode: 401, message: "requests not found" },
     user_not_register: { httpCode: 400, statusCode: 401, message: "something went wrong try again" },
     chapter_not_found: { httpCode: 400, statusCode: 401, message: "chapter_not_found" },
     attendence_already: { httpCode: 400, statusCode: 401, message: "attendence_already_done" },
@@ -23,6 +24,8 @@ export const error = {
     removed_already: { httpCode: 400, statusCode: 402, message: "student_already removed" },
     request_already: { httpCode: 400, statusCode: 402, message: "request already send" },
     user_not_found: { httpCode: 400, statusCode: 403, message: "user not found" },
+    rqst_send: { httpCode: 400, statusCode: 403, message: "Your request send for approval" },
+    rqst_removed: { httpCode: 400, statusCode: 403, message: "Your request hase been removed" },
     topic_not_found: { httpCode: 400, statusCode: 403, message: "Topic not found" },
     credential_not_match: { httpCode: 400, statusCode: 404, message: "Email and password not match" },
     credential_not_matched: { httpCode: 400, statusCode: 404, message: "unique_code and class_id not match" },

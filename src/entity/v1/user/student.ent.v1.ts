@@ -22,6 +22,8 @@ class StudentEntity extends BaseEntity {
             user_id: user_id,
             profile_image: payload.profile_image,
             profile_type: 0,
+            active: 0,
+            approved: 0,
             DOB: payload.DOB,
             gender: payload.gender,
             parent_mobile: payload.parent_mobile
@@ -36,10 +38,10 @@ class StudentEntity extends BaseEntity {
                 last_name: payload.last_name,
                 email: payload.email,
                 mobile: payload.mobile,
-                active: 1,
+                active: 0,
                 password: password,
                 password_salt: password_salt,
-                approved: 1,
+                approved: 0,
                 date_created: payload.date_created,
                 date_modified: payload.date_modified,
                 user_type: 0
@@ -67,11 +69,11 @@ class StudentEntity extends BaseEntity {
         let join_data = await Join_requestModule.create({
             request_created_by: user.user_id,
             name: user.first_name + " " + user.last_name,
-            profile_image:user.profile_image,
+            profile_image: user.profile_image,
             unique_code: payload.unique_code,
             req_id: req_id,
             class_id: clss.class_id,
-            status:0
+            status: 0
         })
         if (join_data) {
             return { success: true, data: join_data.toJSON() }
@@ -83,7 +85,7 @@ class StudentEntity extends BaseEntity {
 
     async check_req(user: any, payload: any): Promise<any> {
         //  let unique_code = payload.unique_code
-        let check_user = await Join_requestModule.findOne({ where: { request_created_by: user.user_id, unique_code: payload.unique_code , status:0 } })
+        let check_user = await Join_requestModule.findOne({ where: { request_created_by: user.user_id, unique_code: payload.unique_code, status: 0 } })
         if (check_user) {
             return { success: true, data: check_user.toJSON() }
         } else {
@@ -93,7 +95,7 @@ class StudentEntity extends BaseEntity {
 
     async check_status(user: any, payload: any): Promise<any> {
         //  let unique_code = payload.unique_code
-        let check_user = await Join_requestModule.findOne({ where: { request_created_by: user.user_id, unique_code: payload.unique_code ,status:1} })
+        let check_user = await Join_requestModule.findOne({ where: { request_created_by: user.user_id, unique_code: payload.unique_code, status: 1 } })
         if (check_user) {
             return { success: true, data: check_user.toJSON() }
         } else {
@@ -103,7 +105,7 @@ class StudentEntity extends BaseEntity {
 
     async check_stats_again(user: any, payload: any): Promise<any> {
         //  let unique_code = payload.unique_code
-        let check_user = await Join_requestModule.findOne({ where: { request_created_by: user.user_id, unique_code: payload.unique_code ,status:2} })
+        let check_user = await Join_requestModule.findOne({ where: { request_created_by: user.user_id, unique_code: payload.unique_code, status: 2 } })
         if (check_user) {
             return { success: true, data: check_user.toJSON() }
         } else {
@@ -125,7 +127,7 @@ class StudentEntity extends BaseEntity {
         let join_data = await Join_requestModule.update({
             status: 0,
         },
-        {where:{status:2}})
+            { where: { status: 2 } })
         if (join_data) {
             return { success: true, data: join_data }
         } else {

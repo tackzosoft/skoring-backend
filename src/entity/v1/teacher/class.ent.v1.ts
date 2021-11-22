@@ -8,6 +8,11 @@ import Class_studentModule from "../../../models/class_student_master.mod";
 import Join_requestModule from "../../../models/join_request_master.mod";
 import Add_student_requestModule from "../../../models/add_student_request_master.mod";
 import Attendence_masterModule from "../../../models/attendence_master.mod";
+import Assigment_masterModule from "../../../models/assigment_master.mod";
+import Assigment_question_masterModule from "../../../models/assigment_question_master.mod";
+import Assigment_option_masterModule from "../../../models/assigment_option_master.mod";
+import Assigment_answer_masterModule from "../../../models/assigment_answer_master.mod";
+// import { PayloadContext } from "twilio/lib/rest/api/v2010/account/recording/addOnResult/payload";
 
 class ClassEntity extends BaseEntity {
 
@@ -136,10 +141,10 @@ class ClassEntity extends BaseEntity {
     }
 
     async update_student_attendence(student: any, payload: any): Promise<any> {
-        let join_data = await Class_studentModule.update({
-            attendence: payload.attendence
+        let join_data = await Attendence_masterModule.update({
+            attendence: student.attendence
         },
-            { where: { student_id: student.student_id, class_id: payload.class_id } })
+            { where: { student_id: student.student_id, class_id: payload.class_id, attendence_date: payload.attendence_date } })
         if (join_data) {
             return { success: true, data: join_data }
         } else {
@@ -150,11 +155,11 @@ class ClassEntity extends BaseEntity {
 
     async get_student_attendence(payload: any, user: any): Promise<any> {
         let class_id = payload.class_id
-        let check_user = await Attendence_masterModule.findAll({ where: { class_id: class_id, attendence_date: payload.attendence_date, teacher_id: user.user_id }, raw: true })
+        let check_user: any = await Attendence_masterModule.findAll({ where: { class_id: class_id, attendence_date: payload.attendence_date, teacher_id: user.user_id }, raw: true })
         if (check_user) {
             return { success: true, data: check_user }
         } else {
-            console.log(check_user)
+            // console.log(check_user)
             return { success: false }
         }
     }
@@ -170,6 +175,104 @@ class ClassEntity extends BaseEntity {
             return { success: false }
         }
 
+    }
+
+    async create_assignment_data(payload: any, user: any): Promise<any> {
+        var assigment_id = helper.generateRandom("assigment_id");
+        let assigment_data = await Assigment_masterModule.create({
+            teacher_id: user.user_id,
+            dead_line: payload.dead_line,
+            assigment_type: payload.assigment_type,
+            assigment_id: assigment_id,
+            class_id: payload.class_id,
+            student_id: payload.student_id,
+            active: 1,
+            approved: 1,
+            assigment_file: payload.assigment_file
+        })
+        if (assigment_data) {
+            return { success: true, data: assigment_data.toJSON() }
+        } else {
+            return { success: false }
+        }
+
+    }
+
+    async create_assignment_question(payload: any, assgn: any): Promise<any> {
+        var assigment_question_id = helper.generateRandom("assigment_question_id");
+        let assigment_data = await Assigment_question_masterModule.create({
+            teacher_id: assgn.teacher_id,
+            assigment_question_id: assigment_question_id,
+            assigment_id: assgn.assigment_id,
+            assigment_question: payload.assigment_question,
+            assigment_question_type: payload.assigment_question_type,
+            question_image: payload.question_image
+        })
+        if (assigment_data) {
+            return { success: true, data: assigment_data.toJSON() }
+        } else {
+            return { success: false }
+        }
+
+    }
+
+    async create_assignment_option(payload: any, assgn: any): Promise<any> {
+        let assgn_opt = payload
+        var assigment_option_id = helper.generateRandom("assigment_option_id");
+        let assigment_data = await Assigment_option_masterModule.create({
+            teacher_id: assgn.teacher_id,
+            assigment_option_id: assigment_option_id,
+            assigment_question_id: assgn.assigment_question_id,
+            assigment_id: assgn.assigment_id,
+            option: assgn_opt.option,
+            option_image: assgn_opt.option_image,
+            is_correct: assgn_opt.is_correct
+        })
+        if (assigment_data) {
+            return { success: true, data: assigment_data.toJSON() }
+        } else {
+            return { success: false }
+        }
+
+    }
+
+    async create_assignment_answer(payload: any, assgn: any): Promise<any> {
+        let answer_image = payload.answer_image
+        let answer = payload.answer
+        var assigment_answer_id = helper.generateRandom("assigment_answer_id");
+        let assigment_data = await Assigment_answer_masterModule.create({
+            teacher_id: assgn.teacher_id,
+            assigment_answer_id: assigment_answer_id,
+            assigment_question_id: assgn.assigment_question_id,
+            assigment_id: assgn.assigment_id,
+            answer: answer,
+            answer_image: answer_image,
+        })
+        if (assigment_data) {
+            return { success: true, data: assigment_data.toJSON() }
+        } else {
+            return { success: false }
+        }
+
+    }
+
+    async get_assgn_data(payload: any): Promise<any> {
+        let assgn_data: any = await Assigment_masterModule.findOne({ where: { class_id: payload.class_id } });
+        if (assgn_data) {
+            let assgn_qstn = await Assigment_question_masterModule.findAll({ where: { assigment_id: assgn_data.assigment_id } })
+            if (assgn_qstn) {
+                let assgn_opt = await Assigment_option_masterModule.findAll({ where: { assigment_id: assgn_data.assigment_id } })
+                if (assgn_opt) {
+                    let assgn_ans = await Assigment_answer_masterModule.findAll({ where: { assigment_id: assgn_data.assigment_id } })
+                    if (assgn_ans) {
+                        assgn_data["assigment_question"] = assgn_qstn
+                        assgn_data["assigment_option"] = assgn_opt
+                        assgn_data["assigment_answer"] = assgn_ans
+                        return { success: true, data: assgn_data, assgn_qstn, assgn_opt, assgn_ans }
+                    }
+                }
+            }
+        }
     }
 
     async get_classes(user: any): Promise<any> {
@@ -195,6 +298,15 @@ class ClassEntity extends BaseEntity {
     async get_class_student(payload: any): Promise<any> {
         let class_id = payload.class_id
         let check_user = await Class_studentModule.findAll({ where: { class_id: class_id, active: 1 }, attributes: ["student_id", "class_id", "name", "profile_image"] })
+        if (check_user) {
+            return { success: true, data: check_user }
+        } else {
+            return { success: false }
+        }
+    }
+
+    async get_class_student_data(student: any, payload: any): Promise<any> {
+        let check_user = await Class_studentModule.findAll({ where: { student_id: payload.student_id }, attributes: ["name", "profile_image"] })
         if (check_user) {
             return { success: true, data: check_user }
         } else {
@@ -294,6 +406,16 @@ class ClassEntity extends BaseEntity {
     async check_teacher(user: any): Promise<any> {
         let created_by = user.user_id
         let check_user = await Create_classModule.findOne({ where: { created_by: created_by } })
+        if (check_user) {
+            return { success: true, data: check_user }
+        } else {
+            return { success: false }
+        }
+    }
+
+    async check_teacher_class(user: any, payload: any): Promise<any> {
+        let created_by = user.user_id
+        let check_user = await Create_classModule.findOne({ where: { created_by: created_by, class_id: payload.class_id } })
         if (check_user) {
             return { success: true, data: check_user }
         } else {

@@ -6,7 +6,17 @@ class UserEntity extends BaseEntity {
 
     async check_user(payload: any): Promise<any> {
         let email = payload.email
-        let check_user = await User_masterModule.findOne({ where: { email: email } })
+        let check_user = await User_masterModule.findOne({ where: { email: email, active: 1, approved: 1 } })
+        if (check_user) {
+            return { success: true }
+        } else {
+            return { success: false }
+        }
+    }
+
+    async check_removal(payload: any): Promise<any> {
+        let email = payload.email
+        let check_user = await User_masterModule.findOne({ where: { email: email, active: 2, approved: 2 } })
         if (check_user) {
             return { success: true }
         } else {
@@ -16,9 +26,9 @@ class UserEntity extends BaseEntity {
 
     async check_email(payload: any): Promise<any> {
         let email = payload.email
-        let check_user = await User_masterModule.findOne({ where: { email: email  } })
+        let check_user = await User_masterModule.findOne({ where: { email: email } })
         if (check_user) {
-            return { success: true ,  data:check_user.toJSON()}
+            return { success: true, data: check_user.toJSON() }
         } else {
             return { success: false }
         }
@@ -26,9 +36,9 @@ class UserEntity extends BaseEntity {
 
     async check_phone(payload: any): Promise<any> {
         let mobile = payload.mobile
-        let check_user = await User_masterModule.findOne({ where: {mobile:mobile } })
+        let check_user = await User_masterModule.findOne({ where: { mobile: mobile } })
         if (check_user) {
-            return { success: true, data:check_user.toJSON() }
+            return { success: true, data: check_user.toJSON() }
         } else {
             return { success: false }
         }
@@ -36,7 +46,7 @@ class UserEntity extends BaseEntity {
 
     async get_user_details(payload: any): Promise<any> {
         let email = payload.email;
-        let user_auth = await User_masterModule.findOne({ where: { email: email } })
+        let user_auth = await User_masterModule.findOne({ where: { email: email, active: 1, approved: 1 } })
         if (user_auth) {
             if (user_auth) {
                 return { success: true, data: user_auth.toJSON() }

@@ -15,7 +15,7 @@ Student_profileModule.init(
             type: DataTypes.STRING,
             allowNull: true,
         },
-        profile_type: {
+        user_type: {
             type: DataTypes.INTEGER,
             allowNull: true,
         },
@@ -54,6 +54,12 @@ Student_profileModule.init(
         parent_mobile: {
             type: DataTypes.STRING,
             allowNull: true,
+        },
+        active: {
+            type: DataTypes.INTEGER,
+        },
+        approved: {
+            type: DataTypes.INTEGER,
         },
 
     },

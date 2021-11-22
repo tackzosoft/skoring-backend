@@ -20,8 +20,8 @@ class OnBoardCtrClass extends BaseCtr {
 
             let payload: IUser.Request.LoginUser = req.body;
             let check_user = await UserV1.check_user(payload)
-            if (check_user.success == true) {
-                
+            if (check_user.length > 0) {
+
 
                 let user_auth = await UserV1.get_user_details(payload)
                 if (user_auth.success == true) {
@@ -34,10 +34,16 @@ class OnBoardCtrClass extends BaseCtr {
                         this.sendResponse(res, error.user.credential_not_match)
                     }
                 } else {
+
                     this.sendResponse(res, error.user.user_not_found)
                 }
             } else {
-                this.sendResponse(res, error.user.user_not_found)
+                let check_removal = await UserV1.check_removal(payload)
+                if (check_removal.success === true) {
+                    this.sendResponse(res, error.user.rqst_removed)
+                } else {
+                    this.sendResponse(res, error.user.rqst_send)
+                }
             }
 
         } catch (err) {

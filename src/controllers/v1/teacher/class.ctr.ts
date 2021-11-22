@@ -272,19 +272,81 @@ class ClassCtrClass extends BaseCtr {
         try {
             let payload: IUser.Request.add_studeent = req.body;
             let get_data = await ClassV1.get_student_attendence(payload, req.user);
-            console.log(get_data.data)
+            // console.log(get_data.data)
             let getData = get_data.data
             if (getData.length == 0) {
-                console.log("abc")
+                // console.log("abc")
                 let get_class_student = await ClassV1.get_class_student(payload);
                 if (get_class_student.success === true) {
-                    console.log(get_class_student.data)
+                    // console.log(get_class_student.data)
                     let class_data = get_class_student.data
                     this.sendResponse(res, success.default, class_data)
                 }
             } else {
                 let class_data = get_data.data
                 this.sendResponse(res, success.default, class_data)
+            }
+        } catch (err) {
+            next(err)
+        }
+    }
+
+    async create_assignment(req: IApp.IRequest, res: Response, next: NextFunction) {
+        try {
+            let payload: IUser.Request.assigment = req.body;
+            let check_user = await ClassV1.check_teacher_class(req.user, payload);
+            if (check_user.success == true) {
+                let assigment_data = await ClassV1.create_assignment_data(payload, req.user);
+                if (assigment_data.success == true) {
+                    let assigment_question = payload.assigment;
+                    assigment_question.map(async (assgn_question: any) => {
+                        let assgn_qstn = await ClassV1.create_assignment_question(assgn_question, assigment_data.data)
+                        let assig_qstn_type = assgn_qstn.data
+                        if (assig_qstn_type.assigment_question_type === "0") {
+                            let assignment_options = assgn_question.options;
+                            assignment_options.map(async (assgn_option: any) => {
+                                let assgn_opt = await ClassV1.create_assignment_option(assgn_option, assgn_qstn.data)
+                                if (assgn_option == assignment_options[assignment_options.length - 1]) {
+                                    console.log(assgn_opt)
+                                }
+                            })
+
+                        } else {
+                            let assgn_ans = await ClassV1.create_assignment_answer(assgn_question, assgn_qstn.data)
+                            if (assgn_ans.success === true) {
+                                console.log(assgn_ans)
+
+                            }
+                        }
+                        if (assgn_question == assigment_question[assigment_question.length - 1]) {
+                            console.log(assgn_qstn)
+                            this.sendResponse(res, success.default)
+                        }
+                    })
+                } else {
+                    this.sendResponse(res, error.user.user_not_register);
+                }
+            } else {
+                this.sendResponse(res, error.user.user_not_register);
+            }
+        } catch (err) {
+            next(err)
+        }
+    }
+
+    async get_assignment(req: IApp.IRequest, res: Response, next: NextFunction) {
+        try {
+            let payload: IUser.Request.assigment = req.body;
+            let get_data = await ClassV1.check_teacher_class(req.user, payload);
+            if (get_data.success === true) {
+
+                let get_assignment_data = await ClassV1.get_assgn_data(payload);
+                if (get_assignment_data.success === true) {
+                    let assgn_data = get_assignment_data.data
+                    this.sendResponse(res, success.default, assgn_data)
+                }
+            } else {
+                this.sendResponse(res, error.user.user_not_found)
             }
         } catch (err) {
             next(err)
