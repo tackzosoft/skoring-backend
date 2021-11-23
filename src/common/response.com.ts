@@ -13,6 +13,7 @@ export const error = {
     request_not_found: { httpCode: 400, statusCode: 401, message: "requests not found" },
     user_not_register: { httpCode: 400, statusCode: 401, message: "something went wrong try again" },
     chapter_not_found: { httpCode: 400, statusCode: 401, message: "chapter_not_found" },
+    task_not_found: { httpCode: 400, statusCode: 401, message: "tasks not assigned for today" },
     attendence_already: { httpCode: 400, statusCode: 401, message: "attendence_already_done" },
     user_already: { httpCode: 400, statusCode: 402, message: "User already exist" },
     month_already: { httpCode: 400, statusCode: 402, message: "Month already assigned" },

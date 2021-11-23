@@ -339,11 +339,31 @@ class ClassCtrClass extends BaseCtr {
             let payload: IUser.Request.assigment = req.body;
             let get_data = await ClassV1.check_teacher_class(req.user, payload);
             if (get_data.success === true) {
-
                 let get_assignment_data = await ClassV1.get_assgn_data(payload);
                 if (get_assignment_data.success === true) {
                     let assgn_data = get_assignment_data.data
-                    this.sendResponse(res, success.default, assgn_data)
+                    let qstion_option: any = []
+                    let assg_qst = assgn_data.assigment_question
+                    assg_qst.map(async (empty_data: any) => {
+                        let get_opt = await ClassV1.get_assgn_opt(empty_data)
+                        if (get_opt.success === true) {
+                            empty_data["options"] = get_opt.data
+                            qstion_option.push(empty_data)
+                            if (empty_data == assg_qst[assg_qst.length - 1]) {
+                                console.log(get_opt.data)
+                                assgn_data.assigment_question = qstion_option
+                                this.sendResponse(res, success.default, assgn_data)
+                            }
+                        } else {
+                            empty_data["options"] = null
+                            qstion_option.push(empty_data)
+                            if (empty_data == assg_qst[assg_qst.length - 1]) {
+                                assgn_data.assigment_question = qstion_option
+                                this.sendResponse(res, success.default, assgn_data)
+                            }
+                        }
+
+                    })
                 }
             } else {
                 this.sendResponse(res, error.user.user_not_found)
@@ -353,6 +373,26 @@ class ClassCtrClass extends BaseCtr {
         }
     }
 
+    async get_assignment_by_class_id(req: IApp.IRequest, res: Response, next: NextFunction) {
+        try {
+            let payload: IUser.Request.assigment = req.body;
+            let check_user = await ClassV1.check_teacher_class(req.user, payload)
+
+            if (check_user.success == true) {
+                let get_data = await ClassV1.get_assignment(payload);
+                if (get_data.success == true) {
+                    let assignment_data = get_data.data
+                    this.sendResponse(res, success.default, assignment_data)
+                } else {
+                    this.sendResponse(res, error.user.user_not_found);
+                }
+            } else {
+                this.sendResponse(res, error.user.user_not_register);
+            }
+        } catch (err) {
+            next(err)
+        }
+    }
 }
 
 export const classCtrV1 = new ClassCtrClass();

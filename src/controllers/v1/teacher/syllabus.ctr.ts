@@ -94,6 +94,28 @@ class SyllabusCtrClass extends BaseCtr {
         }
     }
 
+    async get_task(req: IApp.IRequest, res: Response, next: NextFunction) {
+        try {
+            let payload: IUser.Request.add_chapter = req.body;
+            let task_data = await SyllabusV1.task_chapter(payload, req.user);
+            if (task_data.length !== 0) {
+                // console.log("1")
+                let topic_task = await SyllabusV1.task_topic(payload, req.user)
+                if (topic_task.length !== 0) {
+                    let chapter_data = task_data.data
+                    let topic_data = topic_task.data
+                    this.sendResponse(res, success.default, { chapter_data, topic_data })
+                } else {
+                    this.sendResponse(res, error.user.task_not_found)
+                }
+            } else {
+                this.sendResponse(res, error.user.task_not_found)
+            }
+        } catch (err) {
+            next(err)
+        }
+    }
+
     async edit_chapter(req: IApp.IRequest, res: Response, next: NextFunction) {
         try {
             let payload: IUser.Request.add_chapter = req.body;

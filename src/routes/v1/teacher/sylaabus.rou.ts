@@ -103,6 +103,18 @@ export default function (router: Router) {
     );
 
     router.post(
+        "/get_task", auth,
+        celebrate({
+            body: {
+                date: validation.chapter.date
+            }
+        }),
+        (req, res, next) => {
+            syllabusCtrV1.get_task(req, res, next);
+        }
+    );
+
+    router.post(
         "/edit_topic", auth,
         celebrate({
             body: {

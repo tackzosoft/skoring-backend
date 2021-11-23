@@ -19,6 +19,14 @@ Chapter_masterModule.init(
             type: DataTypes.INTEGER,
             allowNull: true,
         },
+        start_date: {
+            type: DataTypes.DATE,
+            allowNull: true,
+        },
+        end_date: {
+            type: DataTypes.DATE,
+            allowNull: true,
+        },
         active: {
             type: DataTypes.INTEGER,
             allowNull: true,

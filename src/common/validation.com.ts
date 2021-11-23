@@ -83,7 +83,10 @@ export default {
         chp_id: Joi.string().trim(),
         chapter_name: Joi.string().trim(),
         class_id: Joi.string().trim(),
-        month: Joi.number()
+        month: Joi.number(),
+        start_date: Joi.date(),
+        end_date: Joi.date(),
+        date: Joi.date()
     },
 
     topic: {

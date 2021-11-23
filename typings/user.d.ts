@@ -178,7 +178,9 @@ export namespace Request {
     class_id: string,
     chapters: Array<[]>
     chapter_name: string,
-    month: number
+    month: number,
+    start_date: Date,
+    end_date: Date
   }
 
   interface add_topic {

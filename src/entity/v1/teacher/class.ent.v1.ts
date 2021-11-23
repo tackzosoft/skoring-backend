@@ -257,21 +257,31 @@ class ClassEntity extends BaseEntity {
     }
 
     async get_assgn_data(payload: any): Promise<any> {
-        let assgn_data: any = await Assigment_masterModule.findOne({ where: { class_id: payload.class_id } });
+        let assgn_data: any = await Assigment_masterModule.findOne({ where: { assigment_id: payload.assigment_id } });
         if (assgn_data) {
-            let assgn_qstn = await Assigment_question_masterModule.findAll({ where: { assigment_id: assgn_data.assigment_id } })
+            let assgn_qstn = await Assigment_question_masterModule.findAll({ where: { assigment_id: payload.assigment_id }, raw: true })
             if (assgn_qstn) {
-                let assgn_opt = await Assigment_option_masterModule.findAll({ where: { assigment_id: assgn_data.assigment_id } })
-                if (assgn_opt) {
-                    let assgn_ans = await Assigment_answer_masterModule.findAll({ where: { assigment_id: assgn_data.assigment_id } })
-                    if (assgn_ans) {
-                        assgn_data["assigment_question"] = assgn_qstn
-                        assgn_data["assigment_option"] = assgn_opt
-                        assgn_data["assigment_answer"] = assgn_ans
-                        return { success: true, data: assgn_data, assgn_qstn, assgn_opt, assgn_ans }
-                    }
-                }
+                assgn_data["assigment_question"] = assgn_qstn
+                return { success: true, data: assgn_data }
             }
+        }
+    }
+
+    async get_assgn_opt(payload: any): Promise<any> {
+        let assgn_opt = await Assigment_option_masterModule.findAll({ where: { assigment_question_id: payload.assigment_question_id }, raw: true })
+        if (assgn_opt) {
+            return { success: true, data: assgn_opt }
+        } else {
+            return { success: false }
+        }
+    }
+
+    async get_assignment(payload: any): Promise<any> {
+        let assgn_opt = await Assigment_masterModule.findAll({ where: { class_id: payload.class_id }, raw: true })
+        if (assgn_opt) {
+            return { success: true, data: assgn_opt }
+        } else {
+            return { success: false }
         }
     }
 

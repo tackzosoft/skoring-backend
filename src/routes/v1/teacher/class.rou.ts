@@ -133,9 +133,22 @@ export default function (router: Router) {
     );
 
     router.post(
+        "/get_assignment_data", auth,
+        celebrate({
+            body: {
+                class_id: validation.assignment.class_id,
+            }
+        }),
+        (req, res, next) => {
+            classCtrV1.get_assignment_by_class_id(req, res, next)
+        }
+    );
+
+    router.post(
         "/get_assignment", auth,
         celebrate({
             body: {
+                assigment_id: validation.assignment.assigment_id,
                 class_id: validation.assignment.class_id,
             }
         }),

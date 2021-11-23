@@ -3,7 +3,8 @@ import Create_classModule from "../../../models/class_master.mod";
 import Chapter_masterModule from "../../../models/chapter_master.mod";
 import { helper } from "../../../services";
 import Topic_masterModule from "../../../models/topic_master.mod";
-// import { userInfo } from "os";
+import { Op } from "../../../../node_modules/sequelize";
+// import moment from "moment";
 
 class SyllabusEntity extends BaseEntity {
     async create_chapter_data(payload: any, user: any): Promise<any> {
@@ -77,6 +78,28 @@ class SyllabusEntity extends BaseEntity {
         if (profile) {
 
             return { success: true, data: profile.toJSON() }
+        }
+        else {
+            return { success: false }
+
+        }
+    }
+
+    async task_chapter(payload: any, user: any): Promise<any> {
+        let profile = await Chapter_masterModule.findAll({ where: { end_date: { [Op.gte]: payload.date }, start_date: { [Op.lte]: payload.date }, created_by: user.user_id }, attributes: ["chp_id", "month", "start_date", "end_date", "chapter_name", "class_id"] })
+        if (profile) {
+            return { success: true, data: profile }
+        }
+        else {
+            return { success: false }
+
+        }
+    }
+
+    async task_topic(payload: any, user: any): Promise<any> {
+        let topic = await Topic_masterModule.findAll({ where: { end_date: { [Op.gte]: payload.date }, start_date: { [Op.lte]: payload.date }, created_by: user.user_id }, attributes: ["chp_id", "start_date", "end_date", "topic_name", "topic_id"] })
+        if (topic) {
+            return { success: true, data: topic }
         }
         else {
             return { success: false }
@@ -203,7 +226,9 @@ class SyllabusEntity extends BaseEntity {
     async assingn_month_to_chapter(list_of_chp: any, payload: any): Promise<any> {
         let chapters_list = list_of_chp.chp_id
         let chapter_data = await Chapter_masterModule.update({
-            month: payload.month
+            month: payload.month,
+            start_date: list_of_chp.start_date,
+            end_date: list_of_chp.end_date
         },
             { where: { chp_id: chapters_list, class_id: payload.class_id } })
         if (chapter_data) {
