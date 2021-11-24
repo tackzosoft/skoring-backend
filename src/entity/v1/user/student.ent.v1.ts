@@ -22,8 +22,8 @@ class StudentEntity extends BaseEntity {
             user_id: user_id,
             profile_image: payload.profile_image,
             profile_type: 0,
-            active: 0,
-            approved: 0,
+            active: 1,
+            approved: 1,
             DOB: payload.DOB,
             gender: payload.gender,
             parent_mobile: payload.parent_mobile
@@ -38,10 +38,10 @@ class StudentEntity extends BaseEntity {
                 last_name: payload.last_name,
                 email: payload.email,
                 mobile: payload.mobile,
-                active: 0,
+                active: 1,
                 password: password,
                 password_salt: password_salt,
-                approved: 0,
+                approved: 1,
                 date_created: payload.date_created,
                 date_modified: payload.date_modified,
                 user_type: 0

@@ -6,7 +6,7 @@ class UserEntity extends BaseEntity {
 
     async check_user(payload: any): Promise<any> {
         let email = payload.email
-        let check_user = await User_masterModule.findOne({ where: { email: email, active: 1, approved: 1 } })
+        let check_user = await User_masterModule.findOne({ where: { email: email} })
         if (check_user) {
             return { success: true }
         } else {
@@ -14,15 +14,15 @@ class UserEntity extends BaseEntity {
         }
     }
 
-    async check_removal(payload: any): Promise<any> {
-        let email = payload.email
-        let check_user = await User_masterModule.findOne({ where: { email: email, active: 2, approved: 2 } })
-        if (check_user) {
-            return { success: true }
-        } else {
-            return { success: false }
-        }
-    }
+    // async check_removal(payload: any): Promise<any> {
+    //     let email = payload.email
+    //     let check_user = await User_masterModule.findOne({ where: { email: email} })
+    //     if (check_user) {
+    //         return { success: true }
+    //     } else {
+    //         return { success: false }
+    //     }
+    // }
 
     async check_email(payload: any): Promise<any> {
         let email = payload.email
@@ -46,7 +46,7 @@ class UserEntity extends BaseEntity {
 
     async get_user_details(payload: any): Promise<any> {
         let email = payload.email;
-        let user_auth = await User_masterModule.findOne({ where: { email: email, active: 1, approved: 1 } })
+        let user_auth = await User_masterModule.findOne({ where: { email: email} })
         if (user_auth) {
             if (user_auth) {
                 return { success: true, data: user_auth.toJSON() }

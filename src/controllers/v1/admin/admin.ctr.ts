@@ -124,59 +124,59 @@ class AdminCtrClass extends BaseCtr {
         }
     }
 
-    async approve_user(req: IApp.IRequest, res: Response, next: NextFunction) {
-        try {
-            let payload: IUser.Request.User_masterModule = req.body;
-            let check_admin = await AdminV1.check_admin(req.user)
-            if (check_admin.success === true) {
-                if (payload.approved == 1) {
-                    let approval_requests = await AdminV1.approved_user(payload)
-                    if (approval_requests.success === true) {
-                        if (payload.user_type == 0) {
-                            let approved_student = await AdminV1.approved_student(payload)
-                            if (approved_student.success === true) {
+    // async approve_user(req: IApp.IRequest, res: Response, next: NextFunction) {
+    //     try {
+    //         let payload: IUser.Request.User_masterModule = req.body;
+    //         let check_admin = await AdminV1.check_admin(req.user)
+    //         if (check_admin.success === true) {
+    //             if (payload.approved == 1) {
+    //                 let approval_requests = await AdminV1.approved_user(payload)
+    //                 if (approval_requests.success === true) {
+    //                     if (payload.user_type == 0) {
+    //                         let approved_student = await AdminV1.approved_student(payload)
+    //                         if (approved_student.success === true) {
                                 
-                                this.sendResponse(res, success.default)
-                            }
-                        } else {
-                            let approved_teacher = await AdminV1.approved_teacher(payload)
-                            if (approved_teacher.success === true) {
+    //                             this.sendResponse(res, success.default)
+    //                         }
+    //                     } else {
+    //                         let approved_teacher = await AdminV1.approved_teacher(payload)
+    //                         if (approved_teacher.success === true) {
                                
-                                this.sendResponse(res, success.default)
-                            }
-                        }
-                    } else {
-                        this.sendResponse(res, error.user.user_not_found)
+    //                             this.sendResponse(res, success.default)
+    //                         }
+    //                     }
+    //                 } else {
+    //                     this.sendResponse(res, error.user.user_not_found)
 
-                    }
-                } else {
-                    let remove_request = await AdminV1.remove_user(payload)
-                    if (remove_request.success === true) {
-                        if (payload.user_type == 0) {
-                            let remove_student = await AdminV1.remove_student(payload)
-                            if (remove_student.success === true) {
-                                this.sendResponse(res, success.default)
-                            }
-                        } else {
-                            let remove_teacher = await AdminV1.remove_teacher(payload)
-                            if (remove_teacher.success === true) {
-                                // let users_request = approval_requests.data
-                                this.sendResponse(res, success.default)
-                            }
-                        }
-                    } else {
-                        this.sendResponse(res, error.user.user_not_found)
+    //                 }
+    //             } else {
+    //                 let remove_request = await AdminV1.remove_user(payload)
+    //                 if (remove_request.success === true) {
+    //                     if (payload.user_type == 0) {
+    //                         let remove_student = await AdminV1.remove_student(payload)
+    //                         if (remove_student.success === true) {
+    //                             this.sendResponse(res, success.default)
+    //                         }
+    //                     } else {
+    //                         let remove_teacher = await AdminV1.remove_teacher(payload)
+    //                         if (remove_teacher.success === true) {
+    //                             // let users_request = approval_requests.data
+    //                             this.sendResponse(res, success.default)
+    //                         }
+    //                     }
+    //                 } else {
+    //                     this.sendResponse(res, error.user.user_not_found)
 
-                    }
-                }
-            } else {
-                this.sendResponse(res, error.user.user_not_found)
-            }
+    //                 }
+    //             }
+    //         } else {
+    //             this.sendResponse(res, error.user.user_not_found)
+    //         }
 
-        } catch (err) {
-            next(err)
-        }
-    }
+    //     } catch (err) {
+    //         next(err)
+    //     }
+    // }
 }
 
 export const AdminCtrV1 = new AdminCtrClass();

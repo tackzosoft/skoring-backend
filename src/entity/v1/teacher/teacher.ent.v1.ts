@@ -24,8 +24,8 @@ class TeacherEntity extends BaseEntity {
             DOB: payload.DOB,
             gender: payload.gender,
             profile_type: 1,
-            active: 0,
-            approved: 0,
+            active: 1,
+            approved: 1,
         })
         if (teacher_data) {
 
@@ -38,8 +38,8 @@ class TeacherEntity extends BaseEntity {
                 password: password,
                 password_salt: password_salt,
                 mobile: payload.mobile,
-                active: 0,
-                approved: 0,
+                active: 1,
+                approved: 1,
                 date_created: payload.date_created,
                 date_modified: payload.date_modified,
                 user_type: 1

@@ -50,19 +50,19 @@ export default function (router: Router) {
         }
     );
 
-    router.post(
-        "/approve_user", auth,
-        celebrate({
-            body: {
-                user_id: validation.user_master.user_id,
-                user_type: validation.user_master.user_type,
-                approved: validation.user_master.approved
-            }
-        }),
-        (req, res, next) => {
-            AdminCtrV1.approve_user(req, res, next);
-        }
-    );
+    // router.post(
+    //     "/approve_user", auth,
+    //     celebrate({
+    //         body: {
+    //             user_id: validation.user_master.user_id,
+    //             user_type: validation.user_master.user_type,
+    //             approved: validation.user_master.approved
+    //         }
+    //     }),
+    //     (req, res, next) => {
+    //         AdminCtrV1.approve_user(req, res, next);
+    //     }
+    // );
 
     router.post(
         "/approval_request", auth,
