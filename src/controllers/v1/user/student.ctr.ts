@@ -82,6 +82,63 @@ class StudentCtrClass extends BaseCtr {
             next(err)
         }
     }
+
+    async get_joined_class(req: IApp.IRequest, res: Response, next: NextFunction) {
+        try {
+            let check_user = await UserV1.get_user_data_by_user_id(req.user);
+            if (check_user.success == true) {
+                let get_data = await StudentV1.get_student_of_class(req.user);
+                if (get_data.success == true) {
+                    let data = get_data.data
+                    this.sendResponse(res, success.default, data)
+                } else {
+                    this.sendResponse(res, error.user.user_not_found);
+                }
+            } else {
+                this.sendResponse(res, error.user.user_not_register);
+            }
+        } catch (err) {
+            next(err)
+        }
+    }
+
+    async get_task_for_student(req: IApp.IRequest, res: Response, next: NextFunction) {
+        try {
+            let payload: IUser.Request.add_chapter = req.body;
+            let check_user_class = await StudentV1.get_student_of_class(req.user);
+            if (check_user_class.success === true) {
+                let user_in_class = check_user_class.data
+                user_in_class.map(async (joined_class: any) => {
+                    let task_data = await StudentV1.task_chapter(payload, joined_class);
+                    if (task_data.success === true) {
+
+                        let topic_task = task_data.data
+                        topic_task.map(async (daily_task: any) => {
+                            let task_topic = await StudentV1.task_topic(payload, daily_task)
+                            if (task_topic.success === true) {
+                                console.log(task_topic)
+
+                            }
+                            if (daily_task === topic_task[topic_task.length - 1]) {
+                                let chapter_data = task_data.data
+                                let topic_data = task_topic.data
+                                this.sendResponse(res, success.default, { chapter_data, topic_data })
+
+                            }
+                        })
+
+                    }
+                    if (joined_class === user_in_class[user_in_class.length - 1]) {
+                        console.log(task_data)
+                    }
+                })
+            }
+
+        } catch (err) {
+            next(err)
+        }
+    }
+
 }
 
 export const studentCtrV1 = new StudentCtrClass();

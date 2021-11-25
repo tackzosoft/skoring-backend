@@ -1,4 +1,5 @@
-
+import { Op } from "../../../../node_modules/sequelize";
+// import moment from "moment";
 import BaseEntity from "../../base.ent";
 import { helper } from "../../../services";
 import User_masterModule from "../../../models/user_master.mod";
@@ -6,6 +7,9 @@ import Student_profileModule from "../../../models/student_profile.mod";
 import Join_requestModule from "../../../models/join_request_master.mod";
 // import Accept_requestModule from "../../../models/accept_request_master.mod";
 import Create_classModule from "../../../models/class_master.mod";
+import Class_studentModule from "../../../models/class_student_master.mod";
+import Chapter_masterModule from "../../../models/chapter_master.mod";
+import Topic_masterModule from "../../../models/topic_master.mod";
 
 class StudentEntity extends BaseEntity {
     async register_student_data(payload: any): Promise<any> {
@@ -134,6 +138,38 @@ class StudentEntity extends BaseEntity {
             return { success: false }
         }
 
+    }
+
+    async get_student_of_class(user: any): Promise<any> {
+        // let email = payload.email
+        let check_user = await Class_studentModule.findAll({ where: { student_id: user.user_id }, raw: true })
+        if (check_user) {
+            return { success: true, data: check_user }
+        } else {
+            return { success: false }
+        }
+    }
+
+    async task_chapter(payload: any, user: any): Promise<any> {
+        let profile = await Chapter_masterModule.findAll({ where: { end_date: { [Op.gte]: payload.date }, start_date: { [Op.lte]: payload.date }, class_id: user.class_id }, attributes: ["chp_id", "month", "start_date", "end_date", "chapter_name", "class_id"], raw: true })
+        if (profile) {
+            return { success: true, data: profile }
+        }
+        else {
+            return { success: false }
+
+        }
+    }
+
+    async task_topic(payload: any, user: any): Promise<any> {
+        let topic = await Topic_masterModule.findAll({ where: { end_date: { [Op.gte]: payload.date }, start_date: { [Op.lte]: payload.date }, class_id: user.class_id }, attributes: ["chp_id", "start_date", "end_date", "topic_name", "topic_id"] })
+        if (topic) {
+            return { success: true, data: topic }
+        }
+        else {
+            return { success: false }
+
+        }
     }
 }
 

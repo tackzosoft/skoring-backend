@@ -15,6 +15,10 @@ Topic_masterModule.init(
             type: DataTypes.STRING,
             allowNull: true,
         },
+        class_id: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
         start_date: {
             type: DataTypes.DATE,
             allowNull: true,

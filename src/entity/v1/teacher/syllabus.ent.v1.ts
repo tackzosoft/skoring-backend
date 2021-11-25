@@ -32,7 +32,7 @@ class SyllabusEntity extends BaseEntity {
             chp_id: user.chp_id,
             topic_id: topic_id,
             topic_name: payload.topic_name,
-            class_id: user.class_id,
+            class_id: payload.class_id,
             created_by: user.created_by,
             start_date: "0001-01-01",
             end_date: "0001-01-01",

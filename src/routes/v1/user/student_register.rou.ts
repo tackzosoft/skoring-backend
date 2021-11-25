@@ -26,18 +26,38 @@ export default function (router: Router) {
             studentCtrV1.register_student(req, res, next);
         }
     );
- 
+
     router.post(
         "/join_class", auth,
         celebrate({
             body: {
-                unique_code:validation.join.unique_code,
+                unique_code: validation.join.unique_code,
             },
         }),
         (req, res, next) => {
             studentCtrV1.join_class(req, res, next);
         }
     );
-    
+
+    router.get(
+        "/get_joined_class", auth,
+        (req, res, next) => {
+            studentCtrV1.get_joined_class(req, res, next);
+        }
+    );
+
+    router.post(
+        "/get_task_for_student", auth,
+        celebrate({
+            body: {
+                date: validation.chapter.date,
+            },
+        }),
+        (req, res, next) => {
+            studentCtrV1.get_task_for_student(req, res, next);
+        }
+    );
+
+
     return router;
 }
