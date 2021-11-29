@@ -162,7 +162,7 @@ class StudentEntity extends BaseEntity {
     }
 
     async task_topic(payload: any, user: any): Promise<any> {
-        let topic = await Topic_masterModule.findAll({ where: { end_date: { [Op.gte]: payload.date }, start_date: { [Op.lte]: payload.date }, class_id: user.class_id }, attributes: ["chp_id", "start_date", "end_date", "topic_name", "topic_id"] })
+        let topic = await Topic_masterModule.findAll({ where: { end_date: { [Op.gte]: payload.date }, start_date: { [Op.lte]: payload.date }, class_id: user.class_id }, attributes: ["chp_id", "start_date", "end_date", "topic_name", "topic_id"], raw: true })
         if (topic) {
             return { success: true, data: topic }
         }

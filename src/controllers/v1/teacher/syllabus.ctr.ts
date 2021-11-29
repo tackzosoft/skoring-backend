@@ -38,7 +38,6 @@ class SyllabusCtrClass extends BaseCtr {
                 let check_chapter = await SyllabusV1.check_chapter(payload)
                 if (check_chapter.success === true) {
                     let topic_data = payload.topics
-                    // console.log(topic_data)
                     topic_data.map(async (topic_chp: any) => {
                         let create_topic_data = await SyllabusV1.create_topic_data(topic_chp, check_chapter.data)
                         if (topic_chp == topic_data[topic_data.length - 1]) {

@@ -110,28 +110,37 @@ class StudentCtrClass extends BaseCtr {
                 let user_in_class = check_user_class.data
                 user_in_class.map(async (joined_class: any) => {
                     let task_data = await StudentV1.task_chapter(payload, joined_class);
-                    if (task_data.success === true) {
+                    let topic_task = task_data.data
+                    if (topic_task.length !== 0) {
 
-                        let topic_task = task_data.data
+                        console.log("1")
+                        // let topic_task = task_data.data
                         topic_task.map(async (daily_task: any) => {
                             let task_topic = await StudentV1.task_topic(payload, daily_task)
-                            if (task_topic.success === true) {
-                                console.log(task_topic)
+                            let daily_topic = task_topic.data
+                            if (daily_topic.length !== 0) {
 
-                            }
-                            if (daily_task === topic_task[topic_task.length - 1]) {
+                                console.log("2")
                                 let chapter_data = task_data.data
                                 let topic_data = task_topic.data
                                 this.sendResponse(res, success.default, { chapter_data, topic_data })
+                            }
+                            if (daily_task === topic_task[topic_task.length - 1]) {
+                                console.log("3")
 
                             }
                         })
 
+                    } else {
+                        console.log("4")
+                        this.sendResponse(res, error.user.task_not_found)
                     }
                     if (joined_class === user_in_class[user_in_class.length - 1]) {
-                        console.log(task_data)
+                        console.log("5")
                     }
                 })
+            } else {
+                this.sendResponse(res, error.user.user_not_found)
             }
 
         } catch (err) {

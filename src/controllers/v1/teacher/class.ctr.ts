@@ -341,25 +341,30 @@ class ClassCtrClass extends BaseCtr {
             if (get_data.success === true) {
                 let get_assignment_data = await ClassV1.get_assgn_data(payload);
                 if (get_assignment_data.success === true) {
+                    // console.log("1")
                     let assgn_data = get_assignment_data.data
-                    let qstion_option: any = []
+                    let assignment_questions: any = []
                     let assg_qst = assgn_data.assigment_question
                     assg_qst.map(async (empty_data: any) => {
                         let get_opt = await ClassV1.get_assgn_opt(empty_data)
                         if (get_opt.success === true) {
+                            // console.log(get_opt.data)
                             empty_data["options"] = get_opt.data
-                            qstion_option.push(empty_data)
+                            assignment_questions.push(empty_data)
+                            console.log(assignment_questions)
                             if (empty_data == assg_qst[assg_qst.length - 1]) {
-                                console.log(get_opt.data)
-                                assgn_data.assigment_question = qstion_option
-                                this.sendResponse(res, success.default, assgn_data)
+                                // console.log("3")
+                                // console.log(get_opt.data)
+                                assgn_data.assigment_question = assignment_questions
+                                this.sendResponse(res, success.default, { assgn_data, assignment_questions })
                             }
                         } else {
+                            // console.log("4")
                             empty_data["options"] = null
-                            qstion_option.push(empty_data)
+                            assignment_questions.push(empty_data)
                             if (empty_data == assg_qst[assg_qst.length - 1]) {
-                                assgn_data.assigment_question = qstion_option
-                                this.sendResponse(res, success.default, assgn_data)
+                                assgn_data.assigment_question = assignment_questions
+                                this.sendResponse(res, success.default, { assgn_data, assignment_questions })
                             }
                         }
 
