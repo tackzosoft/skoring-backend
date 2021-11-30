@@ -15,7 +15,8 @@ class SyllabusEntity extends BaseEntity {
             class_id: payload.class_id,
             created_by: user.user_id,
             month: "",
-            active: 1
+            active: 1,
+            progress: "0"
         })
         if (chapter_data) {
             return { success: true, data: chapter_data.toJSON() }
@@ -214,6 +215,18 @@ class SyllabusEntity extends BaseEntity {
     async update_chapter_data(payload: any): Promise<any> {
         let chapter_data = await Chapter_masterModule.update({
             chapter_name: payload.chapter_name,
+        },
+            { where: { chp_id: payload.chp_id } })
+        if (chapter_data) {
+            return { success: true, data: chapter_data }
+        } else {
+            return { success: false }
+        }
+    }
+
+    async update_chapter_progress(payload: any): Promise<any> {
+        let chapter_data = await Chapter_masterModule.update({
+            progress: payload.progress,
         },
             { where: { chp_id: payload.chp_id } })
         if (chapter_data) {

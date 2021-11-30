@@ -86,7 +86,8 @@ export default {
         month: Joi.number(),
         start_date: Joi.date(),
         end_date: Joi.date(),
-        date: Joi.date()
+        date: Joi.date(),
+        progress:Joi.string().trim()
     },
 
     topic: {

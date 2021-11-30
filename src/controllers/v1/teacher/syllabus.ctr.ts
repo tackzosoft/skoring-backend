@@ -135,6 +135,42 @@ class SyllabusCtrClass extends BaseCtr {
         }
     }
 
+    async add_progress(req: IApp.IRequest, res: Response, next: NextFunction) {
+        try {
+            let payload: IUser.Request.add_chapter = req.body;
+            let check_user = await SyllabusV1.check_chapters(payload, req.user)
+            if (check_user.success === true) {
+                let chapter_data = await SyllabusV1.update_chapter_progress(payload)
+                if (chapter_data.success == true) {
+                    this.sendResponse(res, success.default)
+                } else {
+                    this.sendResponse(res, error.user.user_not_register);
+                }
+            } else {
+                this.sendResponse(res, error.user.chapter_not_found);
+            }
+
+        } catch (err) {
+            next(err)
+        }
+    }
+
+    async get_progress(req: IApp.IRequest, res: Response, next: NextFunction) {
+        try {
+            let payload: IUser.Request.add_chapter = req.body;
+            let check_user = await SyllabusV1.check_chapters(payload, req.user)
+            if (check_user.success === true) {
+                let chapter_progress = check_user.data
+                this.sendResponse(res, success.default, chapter_progress)
+            } else {
+                this.sendResponse(res, error.user.chapter_not_found);
+            }
+
+        } catch (err) {
+            next(err)
+        }
+    }
+
     async assign_chapter_month(req: IApp.IRequest, res: Response, next: NextFunction) {
         try {
             let payload: IUser.Request.add_chapter = req.body;

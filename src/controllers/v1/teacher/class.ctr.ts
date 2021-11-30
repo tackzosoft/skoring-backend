@@ -62,13 +62,25 @@ class ClassCtrClass extends BaseCtr {
         try {
             let payload: IUser.Request.Get_requests = req.body;
             let check_user = await UserV1.get_user_data_by_user_id(req.user);
-
+            // let class_students: any = [];
             if (check_user.success == true) {
                 let get_data = await ClassV1.get_classes_student(payload);
                 // console.log(req.user)
                 if (get_data.success == true) {
-                    let class_data = get_data.data
-                    this.sendResponse(res, success.default, class_data)
+                    // let cls_id: any = payload.class_id
+                    let get_class = await ClassV1.get_class(payload)
+                    if (get_class.success === true) {
+                        // console.log(get_class)
+                        // cls_id["class_details"] = class_students.data
+                        // class_students.push(cls_id)
+                        // get_data = class_students.data
+                        // get_data["class_details"] = get_class.data
+                        // get_data.push(get_class)
+                        let class_students = get_data.data
+                        let class_details = get_class.data
+                        this.sendResponse(res, success.default, { class_students, class_details })
+                    }
+
                 } else {
                     this.sendResponse(res, error.user.user_not_found);
                 }
@@ -274,17 +286,26 @@ class ClassCtrClass extends BaseCtr {
             let get_data = await ClassV1.get_student_attendence(payload, req.user);
             // console.log(get_data.data)
             let getData = get_data.data
-            if (getData.length == 0) {
-                // console.log("abc")
-                let get_class_student = await ClassV1.get_class_student(payload);
-                if (get_class_student.success === true) {
-                    // console.log(get_class_student.data)
-                    let class_data = get_class_student.data
-                    this.sendResponse(res, success.default, class_data)
-                }
+            // let details: any = [];
+            if (getData.length !== 0) {
+                getData.map(async (std_id: any) => {
+                    let get_class_student = await ClassV1.get_class_student_data(std_id);
+                    if (get_class_student.success === true) {
+                        std_id["details"] = get_class_student.data
+                        // details.push(std_id)
+                    }
+                    if (std_id == getData[getData.length - 1]) {
+
+                        let class_student = get_data.data
+                        this.sendResponse(res, success.default, class_student)
+                    }
+                })
             } else {
-                let class_data = get_data.data
-                this.sendResponse(res, success.default, class_data)
+                let class_data = await ClassV1.get_class_student(payload)
+                if (class_data.success === true) {
+                    let students = class_data.data
+                    this.sendResponse(res, success.default, students)
+                }
             }
         } catch (err) {
             next(err)
@@ -351,11 +372,12 @@ class ClassCtrClass extends BaseCtr {
                             // console.log(get_opt.data)
                             empty_data["options"] = get_opt.data
                             assignment_questions.push(empty_data)
-                            console.log(assignment_questions)
+                            // console.log(assignment_questions)
                             if (empty_data == assg_qst[assg_qst.length - 1]) {
                                 // console.log("3")
                                 // console.log(get_opt.data)
-                                assgn_data.assigment_question = assignment_questions
+                                // let assignment_data = assgn_data.data
+                                // let assigment_questions = assignment_questions.data
                                 this.sendResponse(res, success.default, { assgn_data, assignment_questions })
                             }
                         } else {
@@ -363,7 +385,8 @@ class ClassCtrClass extends BaseCtr {
                             empty_data["options"] = null
                             assignment_questions.push(empty_data)
                             if (empty_data == assg_qst[assg_qst.length - 1]) {
-                                assgn_data.assigment_question = assignment_questions
+                                // let assignment_data = assgn_data.data
+                                // let assigment_questions = assignment_questions.data
                                 this.sendResponse(res, success.default, { assgn_data, assignment_questions })
                             }
                         }

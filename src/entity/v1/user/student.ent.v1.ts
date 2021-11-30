@@ -150,6 +150,16 @@ class StudentEntity extends BaseEntity {
         }
     }
 
+    async get_class(payload: any): Promise<any> {
+        // let unique_code = payload.unique_code
+        let check_user = await Create_classModule.findOne({ where: { class_id: payload.class_id }, attributes: ["class", "subject"] })
+        if (check_user) {
+            return { success: true, data: check_user.toJSON() }
+        } else {
+            return { success: false }
+        }
+    }
+
     async task_chapter(payload: any, user: any): Promise<any> {
         let profile = await Chapter_masterModule.findAll({ where: { end_date: { [Op.gte]: payload.date }, start_date: { [Op.lte]: payload.date }, class_id: user.class_id }, attributes: ["chp_id", "month", "start_date", "end_date", "chapter_name", "class_id"], raw: true })
         if (profile) {

@@ -257,9 +257,9 @@ class ClassEntity extends BaseEntity {
     }
 
     async get_assgn_data(payload: any): Promise<any> {
-        let assgn_data: any = await Assigment_masterModule.findOne({ where: { assigment_id: payload.assigment_id } });
+        let assgn_data: any = await Assigment_masterModule.findOne({ where: { assigment_id: payload.assigment_id },attributes:["assigment_id","student_id","class_id","teacher_id","assigment_file","assigment_type","dead_line"] });
         if (assgn_data) {
-            let assgn_qstn = await Assigment_question_masterModule.findAll({ where: { assigment_id: payload.assigment_id }, raw: true })
+            let assgn_qstn = await Assigment_question_masterModule.findAll({ where: { assigment_id: payload.assigment_id }, attributes: ["assigment_question_id", "assigment_question", "assigment_question_type", "question_image"], raw: true })
             if (assgn_qstn) {
                 assgn_data["assigment_question"] = assgn_qstn
                 return { success: true, data: assgn_data }
@@ -268,7 +268,7 @@ class ClassEntity extends BaseEntity {
     }
 
     async get_assgn_opt(payload: any): Promise<any> {
-        let assgn_opt = await Assigment_option_masterModule.findAll({ where: { assigment_question_id: payload.assigment_question_id }, raw: true })
+        let assgn_opt = await Assigment_option_masterModule.findAll({ where: { assigment_question_id: payload.assigment_question_id }, attributes: ["assigment_option_id", "option", "is_correct", "option_image"], raw: true })
         if (assgn_opt) {
             return { success: true, data: assgn_opt }
         } else {
@@ -288,6 +288,16 @@ class ClassEntity extends BaseEntity {
     async get_classes(user: any): Promise<any> {
         let created_by = user.user_id
         let check_user = await Create_classModule.findAll({ where: { created_by: created_by } })
+        if (check_user) {
+            return { success: true, data: check_user }
+        } else {
+            return { success: false }
+        }
+    }
+
+    async get_class(payload: any): Promise<any> {
+        // let created_by = user.user_id
+        let check_user = await Create_classModule.findOne({ where: { class_id: payload.class_id }, attributes: ["class", "subject"], raw: true })
         if (check_user) {
             return { success: true, data: check_user }
         } else {
@@ -315,7 +325,7 @@ class ClassEntity extends BaseEntity {
         }
     }
 
-    async get_class_student_data(student: any, payload: any): Promise<any> {
+    async get_class_student_data(payload: any): Promise<any> {
         let check_user = await Class_studentModule.findAll({ where: { student_id: payload.student_id }, attributes: ["name", "profile_image"] })
         if (check_user) {
             return { success: true, data: check_user }

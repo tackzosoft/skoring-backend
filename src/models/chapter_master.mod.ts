@@ -15,6 +15,10 @@ Chapter_masterModule.init(
             type: DataTypes.STRING,
             allowNull: true,
         },
+        progress: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
         month: {
             type: DataTypes.INTEGER,
             allowNull: true,

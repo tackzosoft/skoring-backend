@@ -87,10 +87,20 @@ class StudentCtrClass extends BaseCtr {
         try {
             let check_user = await UserV1.get_user_data_by_user_id(req.user);
             if (check_user.success == true) {
+                let class_details: any = [];
                 let get_data = await StudentV1.get_student_of_class(req.user);
                 if (get_data.success == true) {
                     let data = get_data.data
-                    this.sendResponse(res, success.default, data)
+                    data.map(async (class_id: any) => {
+                        let joined_class = await StudentV1.get_class(class_id)
+                        if (joined_class.success === true) {
+                            class_id["details"] = joined_class.data
+                            class_details.push(class_id)
+                            let class_student = get_data.data
+                            let Class_details = class_details.data
+                            this.sendResponse(res, success.default, { class_student, Class_details })
+                        }
+                    })
                 } else {
                     this.sendResponse(res, error.user.user_not_found);
                 }

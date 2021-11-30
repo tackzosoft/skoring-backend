@@ -156,5 +156,30 @@ export default function (router: Router) {
         }
     );
 
+    router.post(
+        "/add_progress", auth,
+        celebrate({
+            body: {
+                chp_id: validation.chapter.chp_id,
+                progress: validation.chapter.progress
+            }
+        }),
+        (req, res, next) => {
+            syllabusCtrV1.add_progress(req, res, next);
+        }
+    );
+
+    router.post(
+        "/get_progress", auth,
+        celebrate({
+            body: {
+                chp_id: validation.chapter.chp_id,
+            }
+        }),
+        (req, res, next) => {
+            syllabusCtrV1.get_progress(req, res, next);
+        }
+    );
+
     return router;
 }
