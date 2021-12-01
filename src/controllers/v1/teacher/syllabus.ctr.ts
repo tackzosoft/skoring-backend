@@ -99,14 +99,14 @@ class SyllabusCtrClass extends BaseCtr {
             let task_data = await SyllabusV1.task_chapter(payload, req.user);
             if (task_data.length !== 0) {
                 // console.log("1")
-                let topic_task = await SyllabusV1.task_topic(payload, req.user)
-                if (topic_task.length !== 0) {
-                    let chapter_data = task_data.data
-                    let topic_data = topic_task.data
-                    this.sendResponse(res, success.default, { chapter_data, topic_data })
-                } else {
-                    this.sendResponse(res, error.user.task_not_found)
-                }
+                // let topic_task = await SyllabusV1.task_topic(payload, req.user)
+                // if (topic_task.length !== 0) {
+                //     let chapter_data = task_data.data
+                //     let topic_data = topic_task.data
+                this.sendResponse(res, success.default, task_data)
+                // } else {
+                //     this.sendResponse(res, error.user.task_not_found)
+                // }
             } else {
                 this.sendResponse(res, error.user.task_not_found)
             }

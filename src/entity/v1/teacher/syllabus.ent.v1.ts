@@ -89,7 +89,14 @@ class SyllabusEntity extends BaseEntity {
     async task_chapter(payload: any, user: any): Promise<any> {
         let profile = await Chapter_masterModule.findAll({ where: { end_date: { [Op.gte]: payload.date }, start_date: { [Op.lte]: payload.date }, created_by: user.user_id }, attributes: ["chp_id", "month", "start_date", "end_date", "chapter_name", "class_id"] })
         if (profile) {
-            return { success: true, data: profile }
+            let topic = await Topic_masterModule.findAll({ where: { end_date: { [Op.gte]: payload.date }, start_date: { [Op.lte]: payload.date }, created_by: user.user_id }, attributes: ["chp_id", "start_date", "end_date", "topic_name", "topic_id"] })
+            if (topic) {
+                return { success: true, data: profile, topic }
+            }
+            else {
+                return { success: false }
+
+            }
         }
         else {
             return { success: false }
@@ -98,14 +105,7 @@ class SyllabusEntity extends BaseEntity {
     }
 
     async task_topic(payload: any, user: any): Promise<any> {
-        let topic = await Topic_masterModule.findAll({ where: { end_date: { [Op.gte]: payload.date }, start_date: { [Op.lte]: payload.date }, created_by: user.user_id }, attributes: ["chp_id", "start_date", "end_date", "topic_name", "topic_id"] })
-        if (topic) {
-            return { success: true, data: topic }
-        }
-        else {
-            return { success: false }
 
-        }
     }
 
     async check_chapters(payload: any, user: any): Promise<any> {

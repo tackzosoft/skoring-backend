@@ -123,30 +123,15 @@ class StudentCtrClass extends BaseCtr {
                     let topic_task = task_data.data
                     if (topic_task.length !== 0) {
 
-                        console.log("1")
-                        // let topic_task = task_data.data
-                        topic_task.map(async (daily_task: any) => {
-                            let task_topic = await StudentV1.task_topic(payload, daily_task)
-                            let daily_topic = task_topic.data
-                            if (daily_topic.length !== 0) {
-
-                                console.log("2")
-                                let chapter_data = task_data.data
-                                let topic_data = task_topic.data
-                                this.sendResponse(res, success.default, { chapter_data, topic_data })
-                            }
-                            if (daily_task === topic_task[topic_task.length - 1]) {
-                                console.log("3")
-
-                            }
-                        })
-
-                    } else {
-                        console.log("4")
-                        this.sendResponse(res, error.user.task_not_found)
                     }
+                    // else {
+                    //     let topic_task = await StudentV1.task_topic(payload, joined_class)
+                    //     if (topic_task.length !== 0) {
+                    //         let topics = topic_task.data
+                    //     }
+                    // }
                     if (joined_class === user_in_class[user_in_class.length - 1]) {
-                        console.log("5")
+                        this.sendResponse(res, success.default, task_data)
                     }
                 })
             } else {
