@@ -153,7 +153,8 @@ export namespace Request {
 
   interface Create_classModule {
     class: string,
-    subject: string
+    subject: string,
+    class_id: string
   }
 
   interface Join_classModule {

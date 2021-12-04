@@ -97,16 +97,17 @@ class SyllabusCtrClass extends BaseCtr {
         try {
             let payload: IUser.Request.add_chapter = req.body;
             let task_data = await SyllabusV1.task_chapter(payload, req.user);
-            if (task_data.length !== 0) {
-                // console.log("1")
-                // let topic_task = await SyllabusV1.task_topic(payload, req.user)
-                // if (topic_task.length !== 0) {
-                //     let chapter_data = task_data.data
-                //     let topic_data = topic_task.data
-                this.sendResponse(res, success.default, task_data)
-                // } else {
-                //     this.sendResponse(res, error.user.task_not_found)
-                // }
+            if (task_data.success === true) {
+                // let Topic: any = []
+                let tasks = task_data.data
+                // tasks.map(async (chp: any) => {
+                //     let topic_task = await SyllabusV1.task_topic(chp, payload)
+                //     console.log(topic_task.data)
+                //     if (topic_task.length !== 0) {
+                //         chp["Topics"] = topic_task
+                //         Topic.push(chp)
+                //         if (chp = tasks[tasks.length - 1]) {
+                this.sendResponse(res, success.default, tasks)
             } else {
                 this.sendResponse(res, error.user.task_not_found)
             }

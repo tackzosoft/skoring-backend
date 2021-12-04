@@ -19,6 +19,20 @@ export default function (router: Router) {
         }
     );
 
+    router.post(
+        "/edit_class", auth,
+        celebrate({
+            body: {
+                class_id: validation.create.class_id,
+                class: validation.create.class,
+                subject: validation.create.subject
+            },
+        }),
+        (req, res, next) => {
+            classCtrV1.edit_class(req, res, next);
+        }
+    );
+
     router.get(
         "/get_class", auth,
         (req, res, next) => {

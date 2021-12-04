@@ -34,6 +34,20 @@ class ClassEntity extends BaseEntity {
 
     }
 
+    async update_class(payload: any, user: any): Promise<any> {
+        let join_data = await Create_classModule.update({
+            class: payload.class,
+            subject: payload.subject
+        },
+            { where: { class_id: payload.class_id, created_by: user.user_id } })
+        if (join_data) {
+            return { success: true, data: join_data }
+        } else {
+            return { success: false }
+        }
+
+    }
+
     async accepted_request(payload: any): Promise<any> {
         let join_data = await Join_requestModule.update({
             status: 1,
@@ -257,7 +271,7 @@ class ClassEntity extends BaseEntity {
     }
 
     async get_assgn_data(payload: any): Promise<any> {
-        let assgn_data: any = await Assigment_masterModule.findOne({ where: { assigment_id: payload.assigment_id },attributes:["assigment_id","student_id","class_id","teacher_id","assigment_file","assigment_type","dead_line"] });
+        let assgn_data: any = await Assigment_masterModule.findOne({ where: { assigment_id: payload.assigment_id }, attributes: ["assigment_id", "student_id", "class_id", "teacher_id", "assigment_file", "assigment_type", "dead_line"] });
         if (assgn_data) {
             let assgn_qstn = await Assigment_question_masterModule.findAll({ where: { assigment_id: payload.assigment_id }, attributes: ["assigment_question_id", "assigment_question", "assigment_question_type", "question_image"], raw: true })
             if (assgn_qstn) {

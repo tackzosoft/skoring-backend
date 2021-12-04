@@ -161,13 +161,13 @@ class StudentEntity extends BaseEntity {
     }
 
     async task_chapter(payload: any, user: any): Promise<any> {
-        let profile: any = await Chapter_masterModule.findAll({ where: { end_date: { [Op.gte]: payload.date }, start_date: { [Op.lte]: payload.date }, class_id: user.class_id }, attributes: ["chp_id", "month", "start_date", "end_date", "chapter_name", "class_id"], raw: true })
-        if (profile) {
+        let chapter: any = await Chapter_masterModule.findAll({ where: { end_date: { [Op.gte]: payload.date }, start_date: { [Op.lte]: payload.date }, class_id: user.class_id }, attributes: ["chp_id", "month", "start_date", "end_date", "chapter_name", "class_id"], raw: true })
+        if (chapter) {
             let topic = await Topic_masterModule.findAll({ where: { end_date: { [Op.gte]: payload.date }, start_date: { [Op.lte]: payload.date }, class_id: user.class_id }, attributes: ["chp_id", "start_date", "end_date", "topic_name", "topic_id"], raw: true })
             if (topic) {
-                profile["Topic"] = topic
+                chapter["Topic"] = topic
                 // console.log(profile)
-                return { success: true, data: profile, topic }
+                return { success: true, data: { chapter, topic } }
             }
         }
         else {

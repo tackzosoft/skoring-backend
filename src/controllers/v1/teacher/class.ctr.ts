@@ -58,6 +58,26 @@ class ClassCtrClass extends BaseCtr {
         }
     }
 
+    async edit_class(req: IApp.IRequest, res: Response, next: NextFunction) {
+        try {
+            let payload: IUser.Request.Create_classModule = req.body;
+            let check_teacher = await ClassV1.check_teacher_class(req.user, payload)
+            if (check_teacher.success === true) {
+                let class_create = await ClassV1.update_class(payload, req.user);
+                if (class_create.success == true) {
+                    this.sendResponse(res, success.default)
+                } else {
+                    this.sendResponse(res, error.user.user_not_register)
+                }
+
+            } else {
+                this.sendResponse(res, error.user.user_not_found)
+            }
+        } catch (err) {
+            next(err)
+        }
+    }
+
     async get_class_student(req: IApp.IRequest, res: Response, next: NextFunction) {
         try {
             let payload: IUser.Request.Get_requests = req.body;

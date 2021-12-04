@@ -46,6 +46,7 @@ export default {
     },
 
     create: {
+        class_id: Joi.string().trim(),
         class: Joi.string().trim(),
         subject: Joi.string().trim(),
     },
@@ -87,7 +88,7 @@ export default {
         start_date: Joi.date(),
         end_date: Joi.date(),
         date: Joi.date(),
-        progress:Joi.string().trim()
+        progress: Joi.string().trim()
     },
 
     topic: {

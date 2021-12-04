@@ -131,7 +131,7 @@ class StudentCtrClass extends BaseCtr {
                     //     }
                     // }
                     if (joined_class === user_in_class[user_in_class.length - 1]) {
-                        this.sendResponse(res, success.default, task_data)
+                        this.sendResponse(res, success.default, topic_task)
                     }
                 })
             } else {
