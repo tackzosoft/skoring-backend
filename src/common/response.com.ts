@@ -25,6 +25,7 @@ export const error = {
     removed_already: { httpCode: 400, statusCode: 402, message: "student_already removed" },
     request_already: { httpCode: 400, statusCode: 402, message: "request already send" },
     user_not_found: { httpCode: 400, statusCode: 403, message: "user not found" },
+    class_not_found: { httpCode: 400, statusCode: 403, message: "class_not_found" },
     rqst_send: { httpCode: 400, statusCode: 403, message: "Your request send for approval" },
     rqst_removed: { httpCode: 400, statusCode: 403, message: "Your request hase been removed" },
     topic_not_found: { httpCode: 400, statusCode: 403, message: "Topic not found" },

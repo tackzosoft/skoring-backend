@@ -306,18 +306,18 @@ class ClassCtrClass extends BaseCtr {
             let get_data = await ClassV1.get_student_attendence(payload, req.user);
             // console.log(get_data.data)
             let getData = get_data.data
-            // let details: any = [];
+            let details: any = [];
             if (getData.length !== 0) {
                 getData.map(async (std_id: any) => {
                     let get_class_student = await ClassV1.get_class_student_data(std_id);
-                    if (get_class_student.success === true) {
-                        std_id["details"] = get_class_student.data
-                        // details.push(std_id)
-                    }
+                    console.log(get_class_student.data)
+                    // if (get_class_student) {
+                    std_id["details"] = get_class_student.data
+                    details.push(std_id)
+                    // }
                     if (std_id == getData[getData.length - 1]) {
-
-                        let class_student = get_data.data
-                        this.sendResponse(res, success.default, class_student)
+                        // let class_student = get_data.data
+                        this.sendResponse(res, success.default, details)
                     }
                 })
             } else {

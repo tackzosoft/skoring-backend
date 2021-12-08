@@ -340,7 +340,7 @@ class ClassEntity extends BaseEntity {
     }
 
     async get_class_student_data(payload: any): Promise<any> {
-        let check_user = await Class_studentModule.findAll({ where: { student_id: payload.student_id }, attributes: ["name", "profile_image"] })
+        let check_user = await Class_studentModule.findAll({ where: { student_id: payload.student_id }, attributes: ["name", "profile_image"], raw: true })
         if (check_user) {
             return { success: true, data: check_user }
         } else {

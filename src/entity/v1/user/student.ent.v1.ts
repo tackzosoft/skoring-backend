@@ -152,9 +152,9 @@ class StudentEntity extends BaseEntity {
 
     async get_class(payload: any): Promise<any> {
         // let unique_code = payload.unique_code
-        let check_user = await Create_classModule.findOne({ where: { class_id: payload.class_id }, attributes: ["class", "subject"] })
+        let check_user = await Create_classModule.findAll({ where: { class_id: payload.class_id }, attributes: ["class", "subject"] })
         if (check_user) {
-            return { success: true, data: check_user.toJSON() }
+            return { success: true, data: check_user }
         } else {
             return { success: false }
         }
