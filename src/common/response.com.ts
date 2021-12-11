@@ -11,6 +11,7 @@ export const error = {
   user: {
     student_not_found: { httpCode: 400, statusCode: 401, message: "student not found in class" },
     request_not_found: { httpCode: 400, statusCode: 401, message: "requests not found" },
+    assignment_not_found: { httpCode: 400, statusCode: 401, message: "assignment_not_found" },
     user_not_register: { httpCode: 400, statusCode: 401, message: "something went wrong try again" },
     chapter_not_found: { httpCode: 400, statusCode: 401, message: "chapter_not_found" },
     task_not_found: { httpCode: 400, statusCode: 401, message: "tasks not assigned for today" },

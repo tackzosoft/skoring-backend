@@ -79,6 +79,16 @@ export default {
         assigment_id: Joi.string().trim(),
         assigment_file: Joi.string().trim(),
     },
+    submit_assignment: {
+        student_id: Joi.string().trim(),
+        assigment_id: Joi.string().trim(),
+        date_submit: Joi.date(),
+        assignment: Joi.array(),
+        assigment_answer: Joi.string().trim(),
+        assigment_option_id: Joi.string().trim(),
+        assigment_question_id: Joi.string().trim(),
+        file: Joi.string().trim(),
+    },
     chapter: {
         chapters: Joi.array(),
         chp_id: Joi.string().trim(),

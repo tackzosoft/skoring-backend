@@ -10,6 +10,10 @@ import Create_classModule from "../../../models/class_master.mod";
 import Class_studentModule from "../../../models/class_student_master.mod";
 import Chapter_masterModule from "../../../models/chapter_master.mod";
 import Topic_masterModule from "../../../models/topic_master.mod";
+import Assigment_masterModule from "../../../models/assigment_master.mod";
+import Assigment_question_masterModule from "../../../models/assigment_question_master.mod";
+import Assigment_option_masterModule from "../../../models/assigment_option_master.mod";
+import Assigment_submit_data_masterModule from "../../../models/assigment_submit_data_master.mod";
 
 class StudentEntity extends BaseEntity {
     async register_student_data(payload: any): Promise<any> {
@@ -186,6 +190,67 @@ class StudentEntity extends BaseEntity {
 
         }
     }
+
+    async get_assgn_data(payload: any): Promise<any> {
+        let assgn_data = await Assigment_masterModule.findAndCountAll({ where: { class_id: payload.class_id }, raw: true });
+        if (assgn_data) {
+            return { success: true, data: assgn_data }
+        } else {
+            return { success: false }
+        }
+    }
+
+    async get_assgn_qstn(payload: any): Promise<any> {
+        let assgn_qstn = await Assigment_question_masterModule.findAndCountAll({ where: { assigment_id: payload.assigment_id }, raw: true })
+        if (assgn_qstn) {
+            return { success: true, data: assgn_qstn }
+        } else {
+            return { success: false }
+        }
+
+    }
+
+    async get_assgn_opt(payload: any): Promise<any> {
+        let assgn_opt = await Assigment_option_masterModule.findAndCountAll({ where: { assigment_question_id: payload.assigment_question_id }, raw: true })
+        if (assgn_opt) {
+            return { success: true, data: assgn_opt }
+        } else {
+            return { success: false }
+        }
+    }
+
+    async submit_assignment_data(assg: any, payload: any, user: any): Promise<any> {
+        var submit_id = helper.generateRandom("submit_id");
+        let assgn_data = await Assigment_submit_data_masterModule.create({
+            student_id: user.user_id,
+            assigment_id: payload.assigment_id,
+            assigment_question_id: assg.assigment_question_id,
+            assigment_option_id: assg.assigment_option_id,
+            assigment_answer: assg.assigment_answer,
+            file: assg.file,
+            active: 1,
+            date_submit: new Date(),
+            submit_id: submit_id
+        })
+        if (assgn_data) {
+            return { success: true, data: assgn_data.toJSON() }
+        } else {
+            return { success: false }
+        }
+
+    }
+
+    async get_submited_assignment_data(user: any): Promise<any> {
+        // var submit_id = helper.generateRandom("submit_id");
+        let assgn_data = await Assigment_submit_data_masterModule.findAll({ where: { student_id: user.user_id } })
+        if (assgn_data) {
+            return { success: true, data: assgn_data }
+        } else {
+            return { success: false }
+        }
+
+    }
+
 }
 
 

@@ -58,6 +58,35 @@ export default function (router: Router) {
         }
     );
 
+    router.get(
+        "/get_assignment_list_student", auth,
+        (req, res, next) => {
+            studentCtrV1.get_assignment_list_student(req, res, next);
+        }
+    );
+
+    router.post(
+        "/submit_assigment", auth,
+        celebrate({
+            body: {
+                // assigment_answer: validation.submit_assignment.assigment_answer,
+                assigment_id: validation.submit_assignment.assigment_id,
+                assignment: validation.submit_assignment.assignment,
+                // date_submit: validation.submit_assignment.date_submit,
+                file: validation.submit_assignment.file,
+            },
+        }),
+        (req, res, next) => {
+            studentCtrV1.submit_assigment(req, res, next);
+        }
+    );
+
+    router.get(
+        "/get_submited_assignment", auth,
+        (req, res, next) => {
+            studentCtrV1.get_submited_assignment(req, res, next);
+        }
+    );
 
     return router;
 }

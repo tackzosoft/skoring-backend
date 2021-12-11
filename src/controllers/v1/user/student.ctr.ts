@@ -152,6 +152,91 @@ class StudentCtrClass extends BaseCtr {
         }
     }
 
+    async get_assignment_list_student(req: IApp.IRequest, res: Response, next: NextFunction) {
+        try {
+            let check_user_class = await StudentV1.get_student_of_class(req.user);
+            if (check_user_class.success === true) {
+                let user_in_class = check_user_class.data
+                let assignment_data: any = []
+                user_in_class.map(async (joined_class: any) => {
+                    let assgn_data = await StudentV1.get_assgn_data(joined_class);
+                    let assignment: any = [];
+                    if (assgn_data.length !== 0) {
+                        let assg_qstn = assgn_data.data.rows
+                        assg_qstn.map(async (assg_id: any) => {
+                            let assgn_qstn = await StudentV1.get_assgn_qstn(assg_id)
+                            if (assgn_qstn.success === true) {
+                                assg_id["questions"] = assgn_qstn.data.rows
+                                assignment.push(assg_id)
+                                let assg_opt = assgn_qstn.data.rows
+                                assg_opt.map(async (assgn_opt: any) => {
+                                    let opt_data = await StudentV1.get_assgn_opt(assgn_opt)
+                                    if (opt_data.success == true) {
+                                        assgn_opt["options"] = opt_data.data.rows
+                                        assignment.push(assgn_opt)
+                                        console.log(assignment)
+                                    }
+                                    if (assgn_opt === assg_opt[assg_opt.length - 1]) {
+
+
+                                    }
+                                })
+                            }
+                            if (assg_id === assg_qstn[assg_qstn.length - 1]) {
+
+                            }
+                        })
+                    }
+                    if (joined_class === user_in_class[user_in_class.length - 1]) {
+                        console.log(assignment_data)
+                        // assignment.push(assgn_data.data.rows)
+                        assignment_data.push(assignment)
+                        this.sendResponse(res, success.default, assignment_data)
+                    }
+                })
+            } else {
+                this.sendResponse(res, error.user.user_not_found)
+            }
+        } catch (err) {
+            next(err)
+        }
+    }
+
+    async submit_assigment(req: IApp.IRequest, res: Response, next: NextFunction) {
+        try {
+            let payload: IUser.Request.submit_assigment = req.body;
+            let assignment_qst = payload.assignment
+            assignment_qst.map(async (assg_data: any) => {
+                let assgn_data = await StudentV1.submit_assignment_data(assg_data, payload, req.user);
+                if (assgn_data.success === true) {
+                    console.log(assg_data)
+                }
+                if (assg_data == assignment_qst[assignment_qst.length - 1]) {
+                    this.sendResponse(res, success.default)
+                }
+            })
+        } catch (err) {
+            next(err)
+        }
+    }
+
+    async get_submited_assignment(req: IApp.IRequest, res: Response, next: NextFunction) {
+        try {
+            // let payload: IUser.Request.submit_assigment = req.body;
+            // let assignment_qst = payload.assignment
+            // assignment_qst.map(async (assg_data: any) => {
+            let assgn_data = await StudentV1.get_submited_assignment_data(req.user);
+            if (assgn_data.success === true) {
+                let assignment = assgn_data.data
+                this.sendResponse(res, success.default, assignment)
+            } else {
+                this.sendResponse(res, error.user.assignment_not_found)
+            }
+        } catch (err) {
+            next(err)
+        }
+    }
+
 }
 
 export const studentCtrV1 = new StudentCtrClass();

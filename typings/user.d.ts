@@ -184,6 +184,16 @@ export namespace Request {
     end_date: Date
   }
 
+  interface submit_assigment {
+    assigment_id: string,
+    assignment: Array<[]>
+    // student_id: string,
+    file: string
+    // month: number,
+    // start_date: Date,
+    // end_date: Date
+  }
+
   interface add_topic {
     class_id: string,
     chp_id: string,
