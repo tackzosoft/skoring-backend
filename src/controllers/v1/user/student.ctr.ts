@@ -5,6 +5,7 @@ import UserV1 from "../../../entity/v1/user/user.ent.v1"
 import UpdProfile from "../../../entity/v1/user/student_profile.ent.v1"
 import StudentV1 from "../../../entity/v1/user/student.ent.v1"
 import { success, error } from "../../../common";
+import ClassV1 from "../../../entity/v1/teacher/class.ent.v1"
 // import { helper } from "../../../services";
 
 
@@ -157,42 +158,16 @@ class StudentCtrClass extends BaseCtr {
             let check_user_class = await StudentV1.get_student_of_class(req.user);
             if (check_user_class.success === true) {
                 let user_in_class = check_user_class.data
-                let assignment_data: any = []
+               // let assignment_data: any = []
                 user_in_class.map(async (joined_class: any) => {
                     let assgn_data = await StudentV1.get_assgn_data(joined_class);
-                    let assignment: any = [];
-                    if (assgn_data.length !== 0) {
-                        let assg_qstn = assgn_data.data.rows
-                        assg_qstn.map(async (assg_id: any) => {
-                            let assgn_qstn = await StudentV1.get_assgn_qstn(assg_id)
-                            if (assgn_qstn.success === true) {
-                                assg_id["questions"] = assgn_qstn.data.rows
-                                assignment.push(assg_id)
-                                let assg_opt = assgn_qstn.data.rows
-                                assg_opt.map(async (assgn_opt: any) => {
-                                    let opt_data = await StudentV1.get_assgn_opt(assgn_opt)
-                                    if (opt_data.success == true) {
-                                        assgn_opt["options"] = opt_data.data.rows
-                                        assignment.push(assgn_opt)
-                                        console.log(assignment)
-                                    }
-                                    if (assgn_opt === assg_opt[assg_opt.length - 1]) {
+                    //let assignment: any = [];
 
 
-                                    }
-                                })
-                            }
-                            if (assg_id === assg_qstn[assg_qstn.length - 1]) {
+                    this.sendResponse(res, success.default, assgn_data.data.rows)
 
-                            }
-                        })
-                    }
-                    if (joined_class === user_in_class[user_in_class.length - 1]) {
-                        console.log(assignment_data)
-                        // assignment.push(assgn_data.data.rows)
-                        assignment_data.push(assignment)
-                        this.sendResponse(res, success.default, assignment_data)
-                    }
+
+                  
                 })
             } else {
                 this.sendResponse(res, error.user.user_not_found)
@@ -232,6 +207,49 @@ class StudentCtrClass extends BaseCtr {
             } else {
                 this.sendResponse(res, error.user.assignment_not_found)
             }
+        } catch (err) {
+            next(err)
+        }
+    }
+
+    async get_assignment(req: IApp.IRequest, res: Response, next: NextFunction) {
+        try {
+            let payload: IUser.Request.assigment = req.body;
+          
+                let get_assignment_data = await ClassV1.get_assgn_data(payload);
+                if (get_assignment_data.success === true) {
+                    // console.log("1")
+                    let assgn_data = get_assignment_data.data
+                    let assignment_questions: any = []
+                    let assg_qst = assgn_data.assigment_question
+                    assg_qst.map(async (empty_data: any) => {
+                        let get_opt = await ClassV1.get_assgn_opt(empty_data)
+                        if (get_opt.success === true) {
+                            // console.log(get_opt.data)
+                            empty_data["options"] = get_opt.data
+                            assignment_questions.push(empty_data)
+                            // console.log(assignment_questions)
+                            if (empty_data == assg_qst[assg_qst.length - 1]) {
+                                // console.log("3")
+                                // console.log(get_opt.data)
+                                // let assignment_data = assgn_data.data
+                                // let assigment_questions = assignment_questions.data
+                                this.sendResponse(res, success.default, { assgn_data, assignment_questions })
+                            }
+                        } else {
+                            // console.log("4")
+                            empty_data["options"] = null
+                            assignment_questions.push(empty_data)
+                            if (empty_data == assg_qst[assg_qst.length - 1]) {
+                                // let assignment_data = assgn_data.data
+                                // let assigment_questions = assignment_questions.data
+                                this.sendResponse(res, success.default, { assgn_data, assignment_questions })
+                            }
+                        }
+
+                    })
+                }
+            
         } catch (err) {
             next(err)
         }

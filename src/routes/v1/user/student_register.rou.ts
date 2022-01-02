@@ -88,5 +88,19 @@ export default function (router: Router) {
         }
     );
 
+    router.post(
+        "/get_assignment", auth,
+        celebrate({
+            body: {
+                assigment_id: validation.assignment.assigment_id,
+                class_id: validation.assignment.class_id,
+            }
+        }),
+        (req, res, next) => {
+            studentCtrV1.get_assignment(req, res, next)
+        }
+    );
+
+
     return router;
 }

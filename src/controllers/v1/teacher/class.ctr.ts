@@ -378,6 +378,7 @@ class ClassCtrClass extends BaseCtr {
     async get_assignment(req: IApp.IRequest, res: Response, next: NextFunction) {
         try {
             let payload: IUser.Request.assigment = req.body;
+            console.log("sdfsdfsd")
             let get_data = await ClassV1.check_teacher_class(req.user, payload);
             if (get_data.success === true) {
                 let get_assignment_data = await ClassV1.get_assgn_data(payload);
