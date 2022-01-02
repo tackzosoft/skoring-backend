@@ -12,7 +12,7 @@ Student_profileModule.init(
             primaryKey: true,
         },
         profile_image: {
-            type: DataTypes.STRING,
+            type: DataTypes.TEXT,
             allowNull: true,
         },
         user_type: {

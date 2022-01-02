@@ -20,7 +20,7 @@ Teacher_profileModule.init(
             allowNull: true,
         },
         profile_image: {
-            type: DataTypes.STRING,
+            type: DataTypes.TEXT,
             allowNull: true,
         },
         qualification: {

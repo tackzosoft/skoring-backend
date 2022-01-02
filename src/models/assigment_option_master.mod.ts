@@ -31,7 +31,7 @@ Assigment_option_masterModule.init(
             allowNull: true
         },
         option_image: {
-            type: DataTypes.STRING,
+            type: DataTypes.TEXT,
             allowNull: true
         },
     },
